@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { api } from "@/lib/api";
+import { convertToBaseCurrency } from "@/lib/format";
 import {
   trackCurrencyChange,
   trackAddAsset,
@@ -97,6 +98,17 @@ export default function HomePage() {
   // Currency symbol lookup
   const currentSymbol =
     currencies.find((c) => c.code === baseCurrency)?.symbol || "$";
+
+  // Top 5 holdings ranked by normalized amount in base currency
+  const topHoldings = useMemo(() => {
+    return [...assets]
+      .sort((a, b) => {
+        const valA = convertToBaseCurrency(a.amount, a.currency, baseCurrency, rates);
+        const valB = convertToBaseCurrency(b.amount, b.currency, baseCurrency, rates);
+        return valB - valA;
+      })
+      .slice(0, 5);
+  }, [assets, baseCurrency, rates]);
 
   // --- Load Supported Currencies ---
   const loadCurrencies = async () => {
@@ -450,7 +462,7 @@ export default function HomePage() {
                 </div>
 
                 <AssetList
-                  assets={assets.slice(0, 5)}
+                  assets={topHoldings}
                   baseCurrency={baseCurrency}
                   rates={rates}
                   showFilters={false}

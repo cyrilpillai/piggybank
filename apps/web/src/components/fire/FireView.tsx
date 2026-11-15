@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { User, FireScenario, FireScenarioSummary } from "@/types";
 import { api } from "@/lib/api";
+import { FireProgressCards } from "./FireProgressCards";
 import { FireKpiCards } from "./FireKpiCards";
 import { FireTrajectoryChart } from "./FireTrajectoryChart";
 import { FireInputForm } from "./FireInputForm";
@@ -365,6 +366,15 @@ export const FireView: React.FC<FireViewProps> = ({
       ) : activeScenario ? (
         /* Active Scenario Dashboards */
         <div className="relative z-10 space-y-6 animate-in fade-in duration-300">
+          {/* Progress Bars: Full FI & Coast FI */}
+          <FireProgressCards
+            metrics={activeScenario.metrics}
+            swr={activeScenario.swr}
+            currencySymbol={currencySymbol}
+            baseCurrency={baseCurrency}
+            goalAge={activeScenario.retirement_age_goal}
+          />
+
           {/* Top KPI Summary Cards */}
           <FireKpiCards
             metrics={activeScenario.metrics}

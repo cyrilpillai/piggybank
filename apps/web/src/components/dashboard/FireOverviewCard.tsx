@@ -3,6 +3,7 @@
 import React from "react";
 import { FireScenario } from "@/types";
 import { formatCompactCurrency } from "@/lib/format";
+import { FireProgressCards } from "@/components/fire/FireProgressCards";
 import {
   Flame,
   ShieldCheck,
@@ -138,43 +139,14 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
         </button>
       </div>
 
-      {/* Primary Progress Bar: Full FI Milestone */}
-      <div className="relative z-10 p-5 rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 text-xs">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-white uppercase tracking-wider text-[11px]">
-              Full FI Corpus Progress
-            </span>
-            <span className="px-2 py-0.5 rounded-full text-xs font-black bg-pink-500/15 text-pink-300 border border-pink-500/25">
-              {fiPercent.toFixed(1)}% Completed
-            </span>
-          </div>
-
-          <div className="text-slate-400 text-xs">
-            <span className="text-slate-300 font-semibold">
-              {currencySymbol}{currentLiquidFormatted.compact}
-            </span>
-            {" of "}
-            <strong className="text-white font-bold">
-              {currencySymbol}{fullFiFormatted.compact}
-            </strong>
-            <span className="text-[11px] text-slate-500 hidden sm:inline"> (Real Target)</span>
-          </div>
-        </div>
-
-        {/* Liquid Gradient Progress Track */}
-        <div className="relative h-3.5 w-full rounded-full bg-black/40 p-0.5 overflow-hidden border border-white/10 shadow-inner">
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-pink-500 via-rose-400 to-amber-400 shadow-[0_0_14px_rgba(244,114,182,0.6)] transition-all duration-700 ease-out"
-            style={{ width: `${Math.max(2, fiPercent)}%` }}
-          />
-        </div>
-
-        <div className="flex items-center justify-between text-[11px] text-slate-400 pt-0.5">
-          <span>Current Invested FIRE Capital</span>
-          <span>Target at SWR {swrFormatted}%</span>
-        </div>
-      </div>
+      {/* Progress Bars: Full FI & Coast FI Milestones */}
+      <FireProgressCards
+        metrics={metrics}
+        swr={scenario.swr}
+        currencySymbol={currencySymbol}
+        baseCurrency={baseCurrency}
+        goalAge={scenario.retirement_age_goal}
+      />
 
       {/* Metric Cards Grid */}
       <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
