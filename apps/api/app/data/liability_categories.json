@@ -1,0 +1,9 @@
+[
+  { "name": "Home Loan", "display_order": 1, "description": "Mortgage and residential property loans" },
+  { "name": "Personal Loan", "display_order": 2, "description": "Unsecured personal loans" },
+  { "name": "Credit Card", "display_order": 3, "description": "Revolving credit balances" },
+  { "name": "Education Loan", "display_order": 4, "description": "Student and educational debt" },
+  { "name": "Automobile Loan", "display_order": 5, "description": "Car, motorcycle and vehicle loans" },
+  { "name": "Business Loan", "display_order": 6, "description": "Commercial and business lines of credit" },
+  { "name": "Other Liabilities", "display_order": 7, "description": "Miscellaneous debts and obligations" }
+]

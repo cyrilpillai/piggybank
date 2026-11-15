@@ -1,0 +1,889 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #020617;
+  --foreground: #f8fafc;
+}
+
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Hide native number input increase/decrease spin buttons globally */
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  /* Native date picker dark theme styling */
+  input[type="date"] {
+    color-scheme: dark;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(0.8) sepia(1) saturate(5) hue-rotate(300deg);
+    opacity: 0.75;
+    transition: opacity 0.2s ease;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+}
+
+/* iOS Liquid Glass Design System */
+@layer components {
+  /* Standardized Liquid Frosted Glass Modal Overlay Backdrop (40% opacity) */
+  .ios-modal-backdrop {
+    background-color: rgba(2, 6, 23, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* Standardized Liquid Frosted Glass Modal Card */
+  .ios-modal-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.015) 100%), rgba(11, 17, 33, 0.55);
+    backdrop-filter: blur(36px) saturate(190%);
+    -webkit-backdrop-filter: blur(36px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-top: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2), 0 20px 48px -12px rgba(0, 0, 0, 0.65);
+    border-radius: 32px;
+  }
+
+  /* Standardized Modal Header */
+  .ios-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Standardized Modal Header Icon Container */
+  .ios-modal-icon {
+    display: flex;
+    height: 2.75rem;
+    width: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  /* Standardized Modal Close Button */
+  .ios-modal-close {
+    padding: 0.5rem;
+    border-radius: 9999px;
+    color: #94a3b8;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ios-modal-close:hover:not(:disabled) {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .ios-modal-close:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* Standardized Floating Dropdown Sheet */
+  .ios-glass-sheet {
+    background: rgba(10, 15, 30, 0.55);
+    backdrop-filter: blur(36px) saturate(190%);
+    -webkit-backdrop-filter: blur(36px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-top: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+    border-radius: 24px;
+  }
+
+  /* Standardized KPI Metric Card */
+  .ios-kpi-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%), rgba(11, 17, 33, 0.45);
+    backdrop-filter: blur(32px) saturate(190%);
+    -webkit-backdrop-filter: blur(32px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.15), 0 16px 36px -10px rgba(0, 0, 0, 0.5);
+    border-radius: 24px;
+    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Standardized Table Container Card */
+  .ios-table-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%), rgba(11, 17, 33, 0.45);
+    backdrop-filter: blur(32px) saturate(190%);
+    -webkit-backdrop-filter: blur(32px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.15), 0 20px 48px -12px rgba(0, 0, 0, 0.55);
+    border-radius: 28px;
+    overflow: hidden;
+  }
+
+  /* Standardized Filter & Controls Toolbar Card */
+  .ios-toolbar-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%), rgba(11, 17, 33, 0.45);
+    backdrop-filter: blur(32px) saturate(190%);
+    -webkit-backdrop-filter: blur(32px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.15), 0 16px 36px -10px rgba(0, 0, 0, 0.5);
+    border-radius: 28px;
+    padding: 1rem;
+  }
+
+  /* Standardized Sub-Stat Metric Item Card */
+  .ios-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 1.25rem;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Standardized Table Header */
+  .ios-table-thead {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+  }
+
+  /* Standardized Table Row */
+  .ios-table-tr {
+    transition: background-color 0.15s ease;
+  }
+
+  .ios-table-tr:hover {
+    background-color: rgba(255, 255, 255, 0.035);
+  }
+
+  /* Standardized Callout / Notification Banner */
+  .ios-callout-card {
+    border-radius: 24px;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, rgba(244, 114, 182, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(11, 17, 33, 0.4);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid rgba(244, 114, 182, 0.22);
+    border-top: 1px solid rgba(244, 114, 182, 0.35);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  }
+
+  /* Standardized Information Callout */
+  .ios-callout-info {
+    border-radius: 1.25rem;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.035);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  /* Standardized Table Icon Action Buttons */
+  .ios-action-btn {
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    color: #94a3b8;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ios-action-btn:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .ios-action-btn-danger {
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    color: #94a3b8;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ios-action-btn-danger:hover {
+    color: #fb7185;
+    background-color: rgba(244, 63, 94, 0.12);
+  }
+
+  /* Standardized Empty State Card & Elements */
+  .ios-empty-state {
+    border-radius: 32px;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%), rgba(11, 17, 33, 0.45);
+    backdrop-filter: blur(36px) saturate(190%);
+    -webkit-backdrop-filter: blur(36px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.18), 0 20px 48px -12px rgba(0, 0, 0, 0.55);
+  }
+
+  .ios-empty-icon {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    height: 3.5rem;
+    width: 3.5rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1.25rem;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-top: 1px solid rgba(255, 255, 255, 0.28);
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1rem;
+  }
+
+  .ios-empty-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+  }
+
+  .ios-empty-desc {
+    font-size: 0.8125rem;
+    color: #94a3b8;
+    max-width: 24rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0.25rem;
+    line-height: 1.5;
+  }
+
+  /* Standardized Frosted Glass Icon Boxes */
+  .ios-icon-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px -1px rgba(0, 0, 0, 0.25);
+  }
+
+  .ios-icon-box-emerald {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.22);
+    border-top: 1px solid rgba(16, 185, 129, 0.4);
+    color: #6ee7b7;
+  }
+
+  .ios-icon-box-rose {
+    background: rgba(244, 63, 94, 0.12);
+    border: 1px solid rgba(244, 63, 94, 0.22);
+    border-top: 1px solid rgba(244, 63, 94, 0.4);
+    color: #fda4af;
+  }
+
+  .ios-icon-box-pink {
+    background: rgba(244, 114, 182, 0.12);
+    border: 1px solid rgba(244, 114, 182, 0.24);
+    border-top: 1px solid rgba(244, 114, 182, 0.42);
+    color: #f472b6;
+    box-shadow: 0 2px 12px -2px rgba(244, 114, 182, 0.2);
+  }
+
+  .ios-icon-box-cyan {
+    background: rgba(6, 182, 212, 0.12);
+    border: 1px solid rgba(6, 182, 212, 0.22);
+    border-top: 1px solid rgba(6, 182, 212, 0.4);
+    color: #67e8f9;
+  }
+
+  /* Standardized Liquid Frosted Glass Badges */
+  .ios-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+
+  .ios-badge-neutral {
+    background: rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+  }
+
+  .ios-badge-emerald {
+    background: rgba(16, 185, 129, 0.15);
+    color: #6ee7b7;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    border-top: 1px solid rgba(16, 185, 129, 0.4);
+  }
+
+  .ios-badge-rose {
+    background: rgba(244, 63, 94, 0.15);
+    color: #fda4af;
+    border: 1px solid rgba(244, 63, 94, 0.25);
+    border-top: 1px solid rgba(244, 63, 94, 0.4);
+  }
+
+  .ios-badge-pink {
+    background: rgba(244, 114, 182, 0.14);
+    color: #f472b6;
+    border: 1px solid rgba(244, 114, 182, 0.25);
+    border-top: 1px solid rgba(244, 114, 182, 0.4);
+  }
+
+  .ios-badge-indigo {
+    background: rgba(99, 102, 241, 0.18);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.28);
+    border-top: 1px solid rgba(99, 102, 241, 0.45);
+  }
+
+  .ios-badge-cyan {
+    background: rgba(6, 182, 212, 0.15);
+    color: #67e8f9;
+    border: 1px solid rgba(6, 182, 212, 0.25);
+    border-top: 1px solid rgba(6, 182, 212, 0.4);
+  }
+
+  .ios-badge-amber {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fcd34d;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-top: 1px solid rgba(245, 158, 11, 0.4);
+  }
+
+  /* Translucent Liquid Frosted Glass Panel */
+  .ios-glass {
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.12), 0 12px 32px 0 rgba(0, 0, 0, 0.35);
+  }
+
+  /* Deep Liquid Glass Card with Specular Top Highlight */
+  .ios-glass-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.015) 100%), rgba(11, 17, 33, 0.45);
+    backdrop-filter: blur(36px) saturate(190%);
+    -webkit-backdrop-filter: blur(36px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.18), 0 20px 48px -12px rgba(0, 0, 0, 0.55);
+  }
+
+  /* Interactive Liquid Glass Pill */
+  .ios-glass-pill {
+    background: rgba(255, 255, 255, 0.035);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ios-glass-pill:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    border-top-color: rgba(255, 255, 255, 0.38);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.22), 0 4px 16px rgba(0, 0, 0, 0.18);
+  }
+
+  /* Liquid Glass Avatar Initial Badge */
+  .ios-avatar-glass {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 50%, rgba(244, 114, 182, 0.12) 100%), rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-top: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.3), 0 8px 20px -4px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Liquid Glass Input */
+  .ios-glass-input {
+    background: rgba(10, 15, 30, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ios-glass-input:focus {
+    background: rgba(15, 23, 42, 0.55);
+    border-color: rgba(255, 255, 255, 0.25);
+    border-top-color: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06), inset 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  }
+
+  /* --- Piggybank Standardized iOS Liquid Glass Segmented Pill Control --- */
+  .ios-segmented-track {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.375rem;
+    padding: 0.375rem;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%), rgba(2, 6, 23, 0.55);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.4), 0 1px 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .ios-segmented-pill {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+    cursor: pointer;
+  }
+
+  /* Inactive Pill: Translucent glass hover */
+  .ios-segmented-pill-inactive {
+    background: transparent;
+    color: #94a3b8;
+    border: 1px solid transparent;
+  }
+
+  .ios-segmented-pill-inactive:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Active Pill - Pink (Retirement / FIRE): True Liquid Frosted Glass with Specular Edge */
+  .ios-segmented-pill-active-pink {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(244, 114, 182, 0.18) 100%), rgba(244, 114, 182, 0.12);
+    backdrop-filter: blur(32px) saturate(200%);
+    -webkit-backdrop-filter: blur(32px) saturate(200%);
+    color: #ffffff;
+    border: 1px solid rgba(244, 114, 182, 0.35);
+    border-top: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.45), 0 4px 20px -2px rgba(244, 114, 182, 0.35), 0 2px 8px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  /* Active Pill - Amber (Emergency Fund): True Liquid Frosted Glass with Specular Edge */
+  .ios-segmented-pill-active-amber {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(245, 158, 11, 0.18) 100%), rgba(245, 158, 11, 0.12);
+    backdrop-filter: blur(32px) saturate(200%);
+    -webkit-backdrop-filter: blur(32px) saturate(200%);
+    color: #ffffff;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    border-top: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.45), 0 4px 20px -2px rgba(245, 158, 11, 0.35), 0 2px 8px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  /* --- Piggybank Standardized Liquid Glass Buttons --- */
+
+  /* Primary CTA: Translucent Liquid Frosted Glass Action Button (No jarring solid colors) */
+  .ios-btn-primary {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(244, 114, 182, 0.1);
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    color: #ffffff;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-top: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.25), 0 8px 24px -4px rgba(0, 0, 0, 0.25);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+
+  .ios-btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(244, 114, 182, 0.16);
+    border-color: rgba(255, 255, 255, 0.22);
+    border-top-color: rgba(255, 255, 255, 0.5);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.35), 0 12px 28px -4px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px);
+  }
+
+  .ios-btn-primary:active:not(:disabled) {
+    transform: scale(0.97);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .ios-btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* Secondary Button: Frosted translucent glass pill */
+  .ios-btn-secondary {
+    background: rgba(255, 255, 255, 0.035);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+    color: #cbd5e1;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+
+  .ios-btn-secondary:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.16);
+    border-top-color: rgba(255, 255, 255, 0.35);
+    color: #ffffff;
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.2), 0 4px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .ios-btn-secondary:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  .ios-btn-secondary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* Danger Button: Translucent rose-tinted liquid glass for deletes */
+  .ios-btn-danger {
+    background: rgba(244, 63, 94, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(244, 63, 94, 0.15);
+    border-top: 1px solid rgba(244, 63, 94, 0.28);
+    color: #fda4af;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+
+  .ios-btn-danger:hover:not(:disabled) {
+    background: rgba(244, 63, 94, 0.12);
+    border-color: rgba(244, 63, 94, 0.28);
+    border-top-color: rgba(244, 63, 94, 0.45);
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(244, 63, 94, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .ios-btn-danger:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  /* --- iOS Liquid Frosted Glass Range Sliders --- */
+  .ios-glass-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-top: 1px solid rgba(255, 255, 255, 0.28);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.08);
+    outline: none;
+    cursor: pointer;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: box-shadow 0.2s ease;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ios-glass-range::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    border-radius: 9999px;
+    background: transparent;
+    border: none;
+  }
+
+  .ios-glass-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    margin-top: -7px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 245, 255, 0.85) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1.5px solid rgba(255, 255, 255, 0.95);
+    border-top: 1.5px solid #ffffff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+    cursor: grab;
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s ease;
+  }
+
+  .ios-glass-range:hover::-webkit-slider-thumb {
+    transform: scale(1.15);
+  }
+
+  .ios-glass-range:active::-webkit-slider-thumb {
+    cursor: grabbing;
+    transform: scale(1.22);
+  }
+
+  .ios-glass-range::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    border-radius: 9999px;
+    background: transparent;
+    border: none;
+  }
+
+  .ios-glass-range::-moz-range-progress {
+    background: transparent;
+    border: none;
+  }
+
+  .ios-glass-range::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(240, 245, 255, 0.85) 100%);
+    border: 1.5px solid rgba(255, 255, 255, 0.95);
+    border-top: 1.5px solid #ffffff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+    cursor: grab;
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.15s ease;
+  }
+
+  .ios-glass-range:hover::-moz-range-thumb {
+    transform: scale(1.15);
+  }
+
+  .ios-glass-range:active::-moz-range-thumb {
+    cursor: grabbing;
+    transform: scale(1.22);
+  }
+
+  /* Color-specific thumb specular glows */
+  .ios-glass-range-pink::-webkit-slider-thumb {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 0 10px rgba(244, 114, 182, 0.45);
+  }
+  .ios-glass-range-pink:hover::-webkit-slider-thumb,
+  .ios-glass-range-pink:active::-webkit-slider-thumb {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55), inset 0 1px 1px #ffffff, 0 0 16px rgba(244, 114, 182, 0.8);
+  }
+  .ios-glass-range-pink::-moz-range-thumb {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 0 10px rgba(244, 114, 182, 0.45);
+  }
+  .ios-glass-range-pink:hover::-moz-range-thumb,
+  .ios-glass-range-pink:active::-moz-range-thumb {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55), inset 0 1px 1px #ffffff, 0 0 16px rgba(244, 114, 182, 0.8);
+  }
+
+  .ios-glass-range-cyan::-webkit-slider-thumb {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 0 10px rgba(6, 182, 212, 0.45);
+  }
+  .ios-glass-range-cyan:hover::-webkit-slider-thumb,
+  .ios-glass-range-cyan:active::-webkit-slider-thumb {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55), inset 0 1px 1px #ffffff, 0 0 16px rgba(34, 211, 238, 0.8);
+  }
+  .ios-glass-range-cyan::-moz-range-thumb {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 0 10px rgba(6, 182, 212, 0.45);
+  }
+  .ios-glass-range-cyan:hover::-moz-range-thumb,
+  .ios-glass-range-cyan:active::-moz-range-thumb {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55), inset 0 1px 1px #ffffff, 0 0 16px rgba(34, 211, 238, 0.8);
+  }
+
+  .ios-glass-range-amber::-webkit-slider-thumb {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 0 10px rgba(245, 158, 11, 0.45);
+  }
+  .ios-glass-range-amber:hover::-webkit-slider-thumb,
+  .ios-glass-range-amber:active::-webkit-slider-thumb {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55), inset 0 1px 1px #ffffff, 0 0 16px rgba(251, 191, 36, 0.8);
+  }
+  .ios-glass-range-amber::-moz-range-thumb {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 0 10px rgba(245, 158, 11, 0.45);
+  }
+  .ios-glass-range-amber:hover::-moz-range-thumb,
+  .ios-glass-range-amber:active::-moz-range-thumb {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55), inset 0 1px 1px #ffffff, 0 0 16px rgba(251, 191, 36, 0.8);
+  }
+
+  .ios-glass-range-emerald::-webkit-slider-thumb {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 0 10px rgba(16, 185, 129, 0.45);
+  }
+  .ios-glass-range-emerald:hover::-webkit-slider-thumb,
+  .ios-glass-range-emerald:active::-webkit-slider-thumb {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55), inset 0 1px 1px #ffffff, 0 0 16px rgba(52, 211, 153, 0.8);
+  }
+  .ios-glass-range-emerald::-moz-range-thumb {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 0 10px rgba(16, 185, 129, 0.45);
+  }
+  .ios-glass-range-emerald:hover::-moz-range-thumb,
+  .ios-glass-range-emerald:active::-moz-range-thumb {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55), inset 0 1px 1px #ffffff, 0 0 16px rgba(52, 211, 153, 0.8);
+  }
+
+  .ios-glass-range-purple::-webkit-slider-thumb {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 0 10px rgba(168, 85, 247, 0.45);
+  }
+  .ios-glass-range-purple:hover::-webkit-slider-thumb,
+  .ios-glass-range-purple:active::-webkit-slider-thumb {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55), inset 0 1px 1px #ffffff, 0 0 16px rgba(192, 132, 252, 0.8);
+  }
+  .ios-glass-range-purple::-moz-range-thumb {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 0 10px rgba(168, 85, 247, 0.45);
+  }
+  .ios-glass-range-purple:hover::-moz-range-thumb,
+  .ios-glass-range-purple:active::-moz-range-thumb {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55), inset 0 1px 1px #ffffff, 0 0 16px rgba(192, 132, 252, 0.8);
+  }
+
+  .ios-glass-range-slate::-webkit-slider-thumb {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 0 8px rgba(148, 163, 184, 0.35);
+  }
+  .ios-glass-range-slate:hover::-webkit-slider-thumb,
+  .ios-glass-range-slate:active::-webkit-slider-thumb {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55), inset 0 1px 1px #ffffff, 0 0 14px rgba(203, 213, 225, 0.7);
+  }
+  .ios-glass-range-slate::-moz-range-thumb {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 0 8px rgba(148, 163, 184, 0.35);
+  }
+  .ios-glass-range-slate:hover::-moz-range-thumb,
+  .ios-glass-range-slate:active::-moz-range-thumb {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55), inset 0 1px 1px #ffffff, 0 0 14px rgba(203, 213, 225, 0.7);
+  }
+}
+
+/* Ambient Liquid Light Mesh Orbs */
+.liquid-mesh-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.liquid-orb-piggy {
+  position: absolute;
+  top: -10%;
+  right: 15%;
+  width: 580px;
+  height: 580px;
+  background: radial-gradient(circle, rgba(244, 114, 182, 0.2) 0%, rgba(249, 168, 212, 0.08) 40%, rgba(244, 114, 182, 0) 70%);
+  filter: blur(85px);
+}
+
+.liquid-orb-emerald {
+  position: absolute;
+  top: -15%;
+  left: 20%;
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.18) 0%, rgba(16, 185, 129, 0) 70%);
+  filter: blur(70px);
+}
+
+.liquid-orb-teal {
+  position: absolute;
+  top: 40%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.15) 0%, rgba(20, 184, 166, 0) 70%);
+  filter: blur(80px);
+}
+
+.liquid-orb-indigo {
+  position: absolute;
+  bottom: -15%;
+  left: 10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.14) 0%, rgba(99, 102, 241, 0) 70%);
+  filter: blur(90px);
+}
+
+/* iOS Smooth Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  backdrop-filter: blur(8px);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}

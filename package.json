@@ -1,0 +1,26 @@
+{
+  "name": "piggybank",
+  "version": "0.2.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev:web",
+    "dev:web": "npm run dev --workspace=apps/web",
+    "dev:api": "cd apps/api && if [ -f .venv/bin/python3 ]; then .venv/bin/python3 -m uvicorn app.main:app --reload --port 8000; else python3 -m uvicorn app.main:app --reload --port 8000; fi",
+    "test:api": "cd apps/api && if [ -f .venv/bin/python3 ]; then PYTHONPATH=. .venv/bin/python3 -m pytest tests; else PYTHONPATH=. pytest tests; fi",
+    "build:web": "npm run build --workspace=apps/web",
+    "lint": "npm run lint --workspace=apps/web"
+  },
+  "keywords": [
+    "piggybank",
+    "wealth-tracker",
+    "personal-finance",
+    "ai-assistant",
+    "fastapi",
+    "nextjs"
+  ],
+  "author": "John Doe",
+  "license": "MIT"
+}

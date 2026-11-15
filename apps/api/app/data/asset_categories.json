@@ -1,0 +1,49 @@
+[
+  {
+    "name": "Cash & Bank",
+    "display_order": 1,
+    "sub_categories": [
+      { "name": "Savings", "is_liquid": true, "display_order": 1 },
+      { "name": "Current", "is_liquid": true, "display_order": 2 }
+    ]
+  },
+  {
+    "name": "Fixed Income",
+    "display_order": 2,
+    "sub_categories": [
+      { "name": "Fixed Deposit", "is_liquid": true, "display_order": 1 },
+      { "name": "PPF", "is_liquid": true, "display_order": 2 },
+      { "name": "EPF", "is_liquid": true, "display_order": 3 },
+      { "name": "Debt Mutual Fund", "is_liquid": true, "display_order": 4 },
+      { "name": "Debt ETFs", "is_liquid": true, "display_order": 5 }
+    ]
+  },
+  {
+    "name": "Equity",
+    "display_order": 3,
+    "sub_categories": [
+      { "name": "Direct Equity Stocks", "is_liquid": true, "display_order": 1 },
+      { "name": "Equity Mutual Fund", "is_liquid": true, "display_order": 2 },
+      { "name": "Equity ETFs", "is_liquid": true, "display_order": 3 }
+    ]
+  },
+  {
+    "name": "Commodities",
+    "display_order": 4,
+    "sub_categories": [
+      { "name": "Physical Gold", "is_liquid": true, "display_order": 1 },
+      { "name": "Digital Gold", "is_liquid": true, "display_order": 2 },
+      { "name": "Gold ETF", "is_liquid": true, "display_order": 3 },
+      { "name": "Car", "is_liquid": false, "display_order": 4 }
+    ]
+  },
+  {
+    "name": "Real Estate",
+    "display_order": 5,
+    "sub_categories": [
+      { "name": "Residential", "is_liquid": false, "display_order": 1 },
+      { "name": "Commercial", "is_liquid": false, "display_order": 2 },
+      { "name": "REIT", "is_liquid": true, "display_order": 3 }
+    ]
+  }
+]
