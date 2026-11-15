@@ -29,7 +29,7 @@ class FXService:
     def __init__(self):
         # Cache structure: { "USD": { "rates": {...}, "timestamp": 12345678 } }
         self._cache: Dict[str, Dict] = {}
-        self._cache_ttl_seconds = 21600  # 6 hours cache
+        self._cache_ttl_seconds = 3600  # 1 hour cache (FreeExchangeRateApi updates hourly)
 
     async def get_rates_for_base(self, base_currency: str) -> Dict[str, float]:
         base = base_currency.upper()
@@ -39,16 +39,33 @@ class FXService:
         if base in self._cache and (now - self._cache[base]["timestamp"] < self._cache_ttl_seconds):
             return self._cache[base]["rates"]
 
-        # Fetch reference rates from Frankfurter (Free, ECB-based, $0 cost)
+        # Fetch reference rates from FreeExchangeRateApi (Free, hourly updated, 170+ currencies)
+        # Reference: https://github.com/haxqer/FreeExchangeRateApi
         try:
             async with httpx.AsyncClient(timeout=4.0) as client:
-                resp = await client.get(f"https://api.frankfurter.app/latest?from={base}")
+                resp = await client.get(
+                    f"https://api.exchangerate.fun/latest?base={base}",
+                    headers={"Accept": "application/json", "User-Agent": "PiggyBank/0.2.0"}
+                )
                 if resp.status_code == 200:
                     data = resp.json()
-                    rates = data.get("rates", {})
-                    rates[base] = 1.0
-                    self._cache[base] = {"rates": rates, "timestamp": now}
-                    return rates
+                    raw_rates = data.get("rates", {})
+                    if raw_rates and isinstance(raw_rates, dict):
+                        rates = {k.upper(): float(v) for k, v in raw_rates.items() if v is not None}
+                        resp_base = str(data.get("base", "")).upper()
+
+                        # Ensure base currency logic:
+                        # If the API returned rates relative to a different base (e.g. USD),
+                        # rebase all rates to the requested base currency.
+                        if resp_base and resp_base != base:
+                            base_rate = rates.get(base)
+                            if base_rate and base_rate > 0:
+                                rates = {k: v / base_rate for k, v in rates.items()}
+                                rates[resp_base] = 1.0 / base_rate
+
+                        rates[base] = 1.0
+                        self._cache[base] = {"rates": rates, "timestamp": now}
+                        return rates
         except Exception:
             pass  # Fall through to synthetic calculation via fallback table
 
