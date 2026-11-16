@@ -2,7 +2,8 @@
 
 import React from "react";
 import { FireCalculationMetrics } from "@/types";
-import { formatCompactCurrency } from "@/lib/format";
+import { formatCompactCurrency, formatPercent } from "@/lib/format";
+import { COPY } from "@/constants/copy";
 import { Flame, ShieldCheck, CheckCircle2 } from "lucide-react";
 
 interface FireProgressCardsProps {
@@ -38,9 +39,7 @@ export const FireProgressCards: React.FC<FireProgressCardsProps> = ({
   // Safe Withdrawal Rate percentage
   const swrNum = swr !== undefined ? Number(swr) : 4;
   const swrPercent = swrNum <= 1 ? swrNum * 100 : swrNum;
-  const swrFormatted = Number.isInteger(swrPercent)
-    ? swrPercent.toFixed(0)
-    : swrPercent.toFixed(1);
+  const swrFormatted = formatPercent(swrPercent, 1, { trimZero: true });
 
   // Formatted compact values
   const currentLiquidFormatted = formatCompactCurrency(currentLiquid, baseCurrency);
@@ -58,12 +57,12 @@ export const FireProgressCards: React.FC<FireProgressCardsProps> = ({
               <Flame className="h-3.5 w-3.5 text-pink-400 fill-pink-500/20" />
             </div>
             <span className="font-bold text-white uppercase tracking-wider text-xs truncate">
-              Full FI Corpus
+              {COPY.FIRE.FULL_FI_CORPUS}
             </span>
           </div>
 
           <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold font-mono tracking-tight whitespace-nowrap bg-pink-500/10 text-pink-300 border border-pink-500/25 shadow-[0_0_12px_rgba(244,114,182,0.15)]">
-            {fiPercent.toFixed(1)}%
+            {formatPercent(fiPercent, 1)}
           </span>
         </div>
 
@@ -102,18 +101,18 @@ export const FireProgressCards: React.FC<FireProgressCardsProps> = ({
               <ShieldCheck className="h-3.5 w-3.5 text-purple-400" />
             </div>
             <span className="font-bold text-white uppercase tracking-wider text-xs truncate">
-              Coast FI Progress
+              {COPY.FIRE.COAST_FI_PROGRESS}
             </span>
           </div>
 
           {metrics.is_coast_fi_achieved || coastPercentRaw >= 100 ? (
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 shadow-[0_0_12px_rgba(6,182,212,0.15)]">
               <CheckCircle2 className="h-3.5 w-3.5 text-cyan-400" />
-              <span>Coast FI Achieved 🎉</span>
+              <span>{COPY.FIRE.COAST_FI_ACHIEVED}</span>
             </span>
           ) : (
             <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold font-mono tracking-tight whitespace-nowrap bg-purple-500/10 text-purple-300 border border-purple-500/25 shadow-[0_0_12px_rgba(168,85,247,0.15)]">
-              {coastPercent.toFixed(1)}%
+              {formatPercent(coastPercent, 1)}
             </span>
           )}
         </div>

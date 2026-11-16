@@ -5,6 +5,7 @@ import { Liability, CurrencyItem, LIABILITY_CATEGORIES } from "@/types";
 import { TrendingDown, Percent } from "lucide-react";
 import { GlassSelect } from "@/components/ui/GlassSelect";
 import { GlassModal } from "@/components/ui/GlassModal";
+import { COPY } from "@/constants/copy";
 
 interface LiabilityModalProps {
   isOpen: boolean;
@@ -65,12 +66,12 @@ export const LiabilityModal: React.FC<LiabilityModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      setError("Please enter a liability name.");
+      setError(COPY.LIABILITIES.VALIDATION_NAME);
       return;
     }
     const parsedAmount = parseFloat(amount);
     if (isNaN(parsedAmount) || parsedAmount <= 0) {
-      setError("Please enter a valid positive debt amount.");
+      setError(COPY.LIABILITIES.VALIDATION_AMOUNT);
       return;
     }
 
@@ -115,8 +116,8 @@ export const LiabilityModal: React.FC<LiabilityModalProps> = ({
     <GlassModal
       isOpen={isOpen}
       onClose={onClose}
-      title={editingLiability ? "Edit Liability" : "Add New Debt / Liability"}
-      description="Track loans, mortgages, and credit balances across currencies"
+      title={editingLiability ? COPY.LIABILITIES.MODAL_TITLE_EDIT : COPY.LIABILITIES.MODAL_TITLE_ADD}
+      description={COPY.LIABILITIES.MODAL_DESC}
       icon={<TrendingDown className="h-5 w-5" />}
       iconColor="rose"
       maxWidth="3xl"
@@ -130,7 +131,7 @@ export const LiabilityModal: React.FC<LiabilityModalProps> = ({
             disabled={isSubmitting}
             className="px-5 py-2.5 rounded-2xl ios-btn-secondary text-sm"
           >
-            Cancel
+            {COPY.COMMON.CANCEL}
           </button>
           <button
             type="submit"
@@ -138,7 +139,11 @@ export const LiabilityModal: React.FC<LiabilityModalProps> = ({
             disabled={isSubmitting}
             className="px-6 py-2.5 rounded-2xl ios-btn-primary text-sm shadow-glass-glow"
           >
-            {isSubmitting ? "Saving to Piggybank..." : editingLiability ? "Update Liability" : "Save Liability"}
+            {isSubmitting
+              ? COPY.LIABILITIES.SAVING_BUTTON
+              : editingLiability
+              ? COPY.LIABILITIES.UPDATE_BUTTON
+              : COPY.LIABILITIES.SAVE_BUTTON}
           </button>
         </>
       }

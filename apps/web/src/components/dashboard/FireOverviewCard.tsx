@@ -2,7 +2,12 @@
 
 import React from "react";
 import { FireScenario } from "@/types";
-import { formatCompactCurrency } from "@/lib/format";
+import {
+  formatCompactCurrency,
+  formatPercent,
+  formatYearsVariance,
+} from "@/lib/format";
+import { COPY } from "@/constants/copy";
 import { FireProgressCards } from "@/components/fire/FireProgressCards";
 import {
   Flame,
@@ -83,13 +88,10 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
   // Safe Withdrawal Rate percentage (stored as a fraction e.g. 0.03 = 3%)
   const swrPercent =
     Number(scenario.swr) <= 1 ? Number(scenario.swr) * 100 : Number(scenario.swr);
-  const swrFormatted = Number.isInteger(swrPercent)
-    ? swrPercent.toFixed(0)
-    : swrPercent.toFixed(1);
+  const swrFormatted = formatPercent(swrPercent, 1, { trimZero: true });
 
   // Timeline variance
-  const varianceNum = metrics.full_fi_timeline_variance;
-  const isAhead = varianceNum !== null && varianceNum !== undefined && varianceNum >= 0;
+  const timeline = formatYearsVariance(metrics.full_fi_timeline_variance);
 
   // Formatted compact numbers
   const currentLiquidFormatted = formatCompactCurrency(currentLiquid, baseCurrency);
@@ -111,14 +113,14 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
-                Primary FIRE Trajectory
+                {COPY.FIRE.PRIMARY_TRAJECTORY}
               </h3>
               <span className="ios-badge ios-badge-pink text-[10px] font-semibold">
                 {scenario.name}
               </span>
               {scenario.is_default && (
                 <span className="hidden sm:inline-flex ios-badge ios-badge-neutral text-[10px]">
-                  Default Plan
+                  {COPY.FIRE.PRIMARY_PLAN}
                 </span>
               )}
             </div>
@@ -169,28 +171,23 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
           </div>
 
           <div className="pt-2 border-t border-white/[0.06]">
-            {varianceNum !== null && varianceNum !== undefined ? (
+            {timeline.hasVariance ? (
               <span
                 className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                  isAhead
+                  timeline.isAhead
                     ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/25"
                     : "bg-amber-500/15 text-amber-300 border border-amber-500/25"
                 }`}
               >
-                {isAhead ? (
-                  <>
-                    <Sparkles className="h-3 w-3" />
-                    <span>+{Math.abs(varianceNum).toFixed(1)}y ahead of goal</span>
-                  </>
+                {timeline.isAhead ? (
+                  <Sparkles className="h-3 w-3" />
                 ) : (
-                  <>
-                    <AlertCircle className="h-3 w-3" />
-                    <span>-{Math.abs(varianceNum).toFixed(1)}y behind goal</span>
-                  </>
+                  <AlertCircle className="h-3 w-3" />
                 )}
+                <span>{timeline.text}</span>
               </span>
             ) : (
-              <span className="text-[10px] text-slate-500">Need higher savings rate</span>
+              <span className="text-[10px] text-slate-500">{timeline.text}</span>
             )}
           </div>
         </div>
@@ -198,7 +195,7 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
         {/* Metric 2: Primary FIRE Coast Milestone */}
         <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col justify-between space-y-3">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Coast FIRE Milestone</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider">{COPY.FIRE.COAST_FI_MILESTONE}</span>
             <ShieldCheck className="h-4 w-4 text-purple-400" />
           </div>
 
@@ -207,10 +204,10 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
               <span className="text-2xl font-black text-white tracking-tight">
                 {currencySymbol}{coastFiFormatted.compact}
               </span>
-              <span className="text-xs text-slate-400">target</span>
+              <span className="text-xs text-slate-400">{COPY.FIRE.TARGET}</span>
             </div>
             <p className="text-[11px] text-slate-400 mt-0.5">
-              Capital needed today to coast to retirement
+              {COPY.FIRE.COAST_TARGET_DESC}
             </p>
           </div>
 
@@ -218,15 +215,15 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
             {metrics.is_coast_fi_achieved ? (
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 shadow-sm">
                 <CheckCircle2 className="h-3 w-3 text-cyan-400" />
-                <span>Coast FI Achieved 🎉</span>
+                <span>{COPY.FIRE.COAST_FI_ACHIEVED}</span>
               </span>
             ) : (
               <div className="flex items-center justify-between text-[10px]">
                 <span className="text-slate-400 font-medium">
-                  Progress: <strong className="text-white">{coastPercent.toFixed(0)}%</strong>
+                  {COPY.FIRE.PROGRESS} <strong className="text-white">{formatPercent(coastPercent, 0)}</strong>
                 </span>
                 <span className="text-amber-300 font-semibold">
-                  Gap: {currencySymbol}{formatCompactCurrency(Math.abs(Number(metrics.coast_fi_gap)), baseCurrency).compact}
+                  {COPY.FIRE.GAP} {currencySymbol}{formatCompactCurrency(Math.abs(Number(metrics.coast_fi_gap)), baseCurrency).compact}
                 </span>
               </div>
             )}
@@ -236,14 +233,14 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
         {/* Metric 3: Monthly Savings Target & Contribution Pace */}
         <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col justify-between space-y-3 sm:col-span-2 lg:col-span-1">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Monthly Savings Pace</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider">{COPY.FIRE.MONTHLY_SAVINGS_PACE}</span>
             <Wallet className="h-4 w-4 text-emerald-400" />
           </div>
 
           <div>
             <div className="text-2xl font-black text-white tracking-tight">
               {currencySymbol}{formatCompactCurrency(Number(metrics.monthly_contribution_needed), baseCurrency).compact}
-              <span className="text-xs text-slate-400 font-normal">/mo</span>
+              <span className="text-xs text-slate-400 font-normal">{COPY.FIRE.PER_MONTH_SUFFIX}</span>
             </div>
             <p className="text-[11px] text-slate-400 mt-0.5">
               Required to hit goal at Age {scenario.retirement_age_goal}
@@ -255,14 +252,14 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
               <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/25">
                 <Sparkles className="h-3 w-3" />
                 <span>
-                  Surplus: +{currencySymbol}{formatCompactCurrency(Number(metrics.gap_vs_current), baseCurrency).compact}/mo
+                  {COPY.FIRE.SURPLUS_PREFIX}{currencySymbol}{formatCompactCurrency(Number(metrics.gap_vs_current), baseCurrency).compact}{COPY.FIRE.PER_MONTH_SUFFIX}
                 </span>
               </span>
             ) : (
               <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-300 border border-rose-500/25">
                 <AlertCircle className="h-3 w-3" />
                 <span>
-                  Shortfall: -{currencySymbol}{formatCompactCurrency(Math.abs(Number(metrics.gap_vs_current)), baseCurrency).compact}/mo
+                  {COPY.FIRE.SHORTFALL_PREFIX}{currencySymbol}{formatCompactCurrency(Math.abs(Number(metrics.gap_vs_current)), baseCurrency).compact}{COPY.FIRE.PER_MONTH_SUFFIX}
                 </span>
               </span>
             )}

@@ -27,6 +27,7 @@ import { LiabilityModal } from "@/components/liabilities/LiabilityModal";
 import { FireView } from "@/components/fire/FireView";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { PiggyLogo } from "@/components/ui/PiggyLogo";
+import { COPY } from "@/constants/copy";
 
 import {
   TrendingUp,
@@ -420,7 +421,7 @@ export default function HomePage() {
               {/* Asset & Liability Category Breakdowns */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <CategoryBreakdownCard
-                  title="Asset Distribution"
+                  title={COPY.CATEGORIES.ASSET_TITLE}
                   type="asset"
                   categories={dashboard?.asset_categories || []}
                   currencySymbol={currentSymbol}
@@ -432,7 +433,7 @@ export default function HomePage() {
                 />
 
                 <CategoryBreakdownCard
-                  title="Liabilities Breakdown"
+                  title={COPY.CATEGORIES.LIABILITY_TITLE}
                   type="liability"
                   categories={dashboard?.liability_categories || []}
                   currencySymbol={currentSymbol}
@@ -486,10 +487,10 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                    Assets Portfolio
+                    {COPY.ASSETS.PAGE_TITLE}
                   </h1>
                   <p className="text-xs text-slate-400 mt-1">
-                    Manage bank accounts, fixed deposits, equity holdings, and real estate.
+                    {COPY.ASSETS.PAGE_DESC}
                   </p>
                 </div>
 
@@ -501,7 +502,7 @@ export default function HomePage() {
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl ios-btn-primary text-xs shadow-glass-glow"
                 >
                   <Plus className="h-4 w-4 stroke-[2.8]" />
-                  <span>Add New Asset</span>
+                  <span>{COPY.ASSETS.ADD_NEW}</span>
                 </button>
               </div>
 
@@ -528,10 +529,10 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                    Liabilities & Debt
+                    {COPY.LIABILITIES.PAGE_TITLE}
                   </h1>
                   <p className="text-xs text-slate-400 mt-1">
-                    Track home loans, automobile loans, education debt, and revolving credit cards.
+                    {COPY.LIABILITIES.PAGE_DESC}
                   </p>
                 </div>
 
@@ -543,7 +544,7 @@ export default function HomePage() {
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl ios-btn-primary text-xs shadow-glass-glow"
                 >
                   <Plus className="h-4 w-4 stroke-[2.8]" />
-                  <span>Add New Liability</span>
+                  <span>{COPY.LIABILITIES.ADD_NEW}</span>
                 </button>
               </div>
 
@@ -589,7 +590,7 @@ export default function HomePage() {
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center ios-modal-backdrop p-4 animate-in fade-in duration-200">
           <div className="w-full max-w-sm ios-modal-card p-6 space-y-4 animate-in fade-in zoom-in-95">
             <div className="ios-modal-header">
-              <h3 className="text-base font-bold text-white">Quick Add Entry</h3>
+              <h3 className="text-base font-bold text-white">{COPY.QUICK_ADD.TITLE}</h3>
               <button
                 onClick={() => setIsQuickAddOpen(false)}
                 className="ios-modal-close"
@@ -599,7 +600,7 @@ export default function HomePage() {
             </div>
 
             <p className="text-xs text-slate-400 leading-relaxed">
-              Select whether you want to log a new asset or an outstanding debt.
+              {COPY.QUICK_ADD.DESCRIPTION}
             </p>
 
             <div className="grid grid-cols-2 gap-3 pt-2">
@@ -614,7 +615,7 @@ export default function HomePage() {
                 <div className="h-11 w-11 rounded-2xl ios-icon-box ios-icon-box-emerald mb-2 group-hover:scale-105 transition">
                   <TrendingUp className="h-5 w-5 stroke-[2.2]" />
                 </div>
-                <span className="text-xs font-bold">Add Asset</span>
+                <span className="text-xs font-bold">{COPY.QUICK_ADD.ADD_ASSET}</span>
               </button>
 
               <button
@@ -628,7 +629,7 @@ export default function HomePage() {
                 <div className="h-11 w-11 rounded-2xl ios-icon-box ios-icon-box-rose mb-2 group-hover:scale-105 transition">
                   <TrendingDown className="h-5 w-5 stroke-[2.2]" />
                 </div>
-                <span className="text-xs font-bold">Add Debt</span>
+                <span className="text-xs font-bold">{COPY.QUICK_ADD.ADD_LIABILITY}</span>
               </button>
             </div>
           </div>
@@ -670,10 +671,14 @@ export default function HomePage() {
           }
         }}
         onConfirm={handleConfirmDelete}
-        title={deleteTarget?.type === "asset" ? "Delete Asset" : "Delete Liability"}
-        description={`Are you sure you want to delete "${deleteTarget?.name}"? This action cannot be undone and will immediately update your calculated net worth.`}
+        title={deleteTarget?.type === "asset" ? COPY.ASSETS.DELETE_TITLE : COPY.LIABILITIES.DELETE_TITLE}
+        description={
+          deleteTarget?.type === "asset"
+            ? COPY.ASSETS.DELETE_DESC
+            : COPY.LIABILITIES.DELETE_DESC
+        }
         confirmText="Delete Entry"
-        cancelText="Cancel"
+        cancelText={COPY.COMMON.CANCEL}
         isDestructive={true}
         isLoading={isDeleting}
         error={deleteError}

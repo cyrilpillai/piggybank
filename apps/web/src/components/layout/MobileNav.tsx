@@ -3,6 +3,7 @@
 import React from "react";
 import { LayoutDashboard, TrendingUp, TrendingDown, Plus, Flame } from "lucide-react";
 import { TabType } from "./Sidebar";
+import { COPY } from "@/constants/copy";
 
 interface MobileNavProps {
   activeTab: TabType;
@@ -28,7 +29,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
             }`}
           >
             <LayoutDashboard className="h-5 w-5" />
-            <span>Overview</span>
+            <span>{COPY.NAV.OVERVIEW}</span>
           </button>
 
           <button
@@ -40,13 +41,13 @@ export const MobileNav: React.FC<MobileNavProps> = ({
             }`}
           >
             <TrendingUp className="h-5 w-5" />
-            <span>Assets</span>
+            <span>{COPY.NET_WORTH.ASSETS_COUNT}</span>
           </button>
 
           {/* Center Liquid Glass Floating Quick-Add Button */}
           <button
             onClick={onQuickAdd}
-            aria-label="Add to Piggybank"
+            aria-label={COPY.NAV.QUICK_ADD_ARIA}
             className="flex h-12 w-12 items-center justify-center -translate-y-3 rounded-full ios-btn-primary shadow-ios-card border border-white/20 border-t-white/50 active:scale-95 transition-all duration-200"
           >
             <Plus className="h-6 w-6 stroke-[2.8]" />
@@ -61,7 +62,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
             }`}
           >
             <TrendingDown className="h-5 w-5" />
-            <span>Debts</span>
+            <span>{COPY.NAV.LIABILITIES}</span>
           </button>
 
           <button
@@ -73,7 +74,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({
             }`}
           >
             <Flame className="h-5 w-5" />
-            <span>FIRE</span>
+            <span>{COPY.NAV.FIRE}</span>
           </button>
         </div>
       </nav>

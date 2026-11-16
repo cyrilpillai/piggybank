@@ -9,11 +9,12 @@ import { FireTrajectoryChart } from "./FireTrajectoryChart";
 import { FireInputForm } from "./FireInputForm";
 import { NewScenarioModal } from "./NewScenarioModal";
 import { CompareScenariosModal } from "./CompareScenariosModal";
-import { DobModal } from "@/components/ui/DobModal";
+import { GlassDatePicker } from "@/components/ui/GlassDatePicker";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { GlassSelect } from "@/components/ui/GlassSelect";
 import { GlassEmptyState } from "@/components/ui/GlassEmptyState";
 import { formatCompactCurrency, formatDob } from "@/lib/format";
+import { COPY } from "@/constants/copy";
 import {
   Flame,
   Plus,
@@ -51,7 +52,6 @@ export const FireView: React.FC<FireViewProps> = ({
   const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeletingScenario, setIsDeletingScenario] = useState(false);
-  const [isDobModalOpen, setIsDobModalOpen] = useState(false);
 
   useEffect(() => {
     loadScenarios();
@@ -211,7 +211,7 @@ export const FireView: React.FC<FireViewProps> = ({
               className="px-4 py-2 rounded-2xl text-xs font-semibold text-slate-300 hover:text-white ios-btn-secondary inline-flex items-center gap-1.5"
             >
               <Layers className="h-4 w-4 text-cyan-400" />
-              <span>Compare Plans</span>
+              <span>{COPY.FIRE.COMPARE_PLANS}</span>
             </button>
           )}
 
@@ -220,7 +220,7 @@ export const FireView: React.FC<FireViewProps> = ({
             className="px-4 py-2 rounded-2xl text-xs font-bold text-white ios-btn-primary shadow-glass-glow transition inline-flex items-center gap-1.5"
           >
             <Plus className="h-4 w-4 stroke-[2.8]" />
-            <span>New Plan</span>
+            <span>{COPY.FIRE.NEW_SCENARIO}</span>
           </button>
         </div>
       </div>
@@ -234,21 +234,38 @@ export const FireView: React.FC<FireViewProps> = ({
             </div>
             <div>
               <h4 className="text-xs font-bold text-white">
-                Date of Birth Required for Accurate Horizon
+                {COPY.FIRE.DOB_BANNER_TITLE}
               </h4>
               <p className="text-[11px] text-slate-300 mt-0.5">
-                Calculates your exact current age, compounding years, and milestone dates.
+                {COPY.FIRE.DOB_BANNER_DESC}
               </p>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => setIsDobModalOpen(true)}
-            className="px-4 py-2 rounded-2xl text-xs font-bold text-white ios-btn-primary shadow-glass-glow flex items-center gap-1.5 shrink-0"
-          >
-            <Calendar className="h-3.5 w-3.5" />
-            <span>Set Date of Birth</span>
-          </button>
+          <GlassDatePicker
+            value={user?.dob}
+            onChange={handleSaveDob}
+            variant="button"
+            maxDate={new Date().toISOString().split("T")[0]}
+            menuAlign="right"
+            renderTrigger={({ isOpen, toggle, isSaving }) => (
+              <button
+                type="button"
+                onClick={toggle}
+                disabled={isSaving}
+                className={`px-4 py-2 rounded-2xl text-xs font-bold text-white ios-btn-primary shadow-glass-glow flex items-center gap-1.5 shrink-0 transition select-none cursor-pointer ${
+                  isOpen ? "ring-2 ring-pink-500/50" : ""
+                } ${isSaving ? "opacity-60" : ""}`}
+              >
+                <Calendar className="h-3.5 w-3.5" />
+                <span>{isSaving ? COPY.COMMON.SAVING : COPY.FIRE.SET_DOB}</span>
+                <ChevronDown
+                  className={`h-3 w-3 transition-transform duration-200 ${
+                    isOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+            )}
+          />
         </div>
       )}
 
@@ -258,7 +275,7 @@ export const FireView: React.FC<FireViewProps> = ({
           <div className="flex items-center gap-2">
             <Info className="h-4 w-4 text-slate-400 shrink-0" />
             <span>
-              Current Liquid Portfolio:{" "}
+              {COPY.FIRE.CURRENT_LIQUID_PORTFOLIO}:{" "}
               <strong className="text-white font-bold">
                 {currencySymbol}
                 {formatCompactCurrency(Number(activeScenario.metrics.current_liquid_portfolio), baseCurrency).compact}
@@ -272,29 +289,15 @@ export const FireView: React.FC<FireViewProps> = ({
               (Automatically aggregated from liquid assets only; physical real estate & vehicles are excluded).
             </span>
           </div>
-          {user?.dob ? (
-            <button
-              type="button"
-              onClick={() => setIsDobModalOpen(true)}
-              className="ios-glass-pill rounded-full px-3 py-1.5 text-xs text-slate-200 hover:text-white flex items-center gap-2 transition cursor-pointer select-none"
-              title="Click to edit your Date of Birth"
-            >
-              <Calendar className="h-3.5 w-3.5 text-pink-400 shrink-0" />
-              <span className="font-semibold text-white">DOB: {formatDob(user.dob)}</span>
-              <span className="text-slate-400 text-[11px]">({activeScenario.metrics.current_age} yrs)</span>
-              <ChevronDown className="h-3 w-3 text-slate-400 shrink-0" />
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setIsDobModalOpen(true)}
-              className="ios-glass-pill rounded-full px-3 py-1.5 text-xs text-pink-300 hover:text-pink-200 flex items-center gap-1.5 transition cursor-pointer select-none"
-            >
-              <Calendar className="h-3.5 w-3.5 text-pink-400 shrink-0" />
-              <span>Set DOB</span>
-              <ChevronDown className="h-3 w-3 text-pink-400 shrink-0" />
-            </button>
-          )}
+          <GlassDatePicker
+            value={user?.dob}
+            onChange={handleSaveDob}
+            variant="pill"
+            maxDate={new Date().toISOString().split("T")[0]}
+            placeholder={COPY.FIRE.SET_DOB}
+            label={COPY.FIRE.DOB_LABEL}
+            menuAlign="right"
+          />
         </div>
       )}
 
@@ -302,7 +305,7 @@ export const FireView: React.FC<FireViewProps> = ({
       {scenarios.length > 0 && activeScenario && (
         <div className="relative z-20 flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl ios-glass">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-slate-400">Active Scenario:</span>
+            <span className="text-xs font-medium text-slate-400">{COPY.FIRE.ACTIVE_SCENARIO}</span>
             <GlassSelect
               value={activeScenario.id}
               onChange={handleSelectScenario}
@@ -316,7 +319,7 @@ export const FireView: React.FC<FireViewProps> = ({
             {activeScenario.is_default ? (
               <span className="ios-badge ios-badge-pink text-[10px]">
                 <Star className="h-2.5 w-2.5 fill-pink-400 text-pink-400" />
-                <span>Primary Plan</span>
+                <span>{COPY.FIRE.PRIMARY_PLAN}</span>
               </span>
             ) : (
               <button
@@ -351,15 +354,15 @@ export const FireView: React.FC<FireViewProps> = ({
           variant="welcome"
           icon={<Flame className="h-8 w-8 fill-pink-500/20" />}
           iconColor="pink"
-          title="Create Your First FIRE Plan"
-          description="Plan your path to Financial Independence and Early Retirement. Calculate your exact target nest egg, required savings rate, and compounding trajectory."
+          title={COPY.FIRE.EMPTY_TITLE}
+          description={COPY.FIRE.EMPTY_DESC}
           action={
             <button
               onClick={() => setIsNewModalOpen(true)}
               className="px-6 py-3 rounded-2xl text-sm font-bold text-white ios-btn-primary shadow-glass-glow inline-flex items-center gap-2"
             >
               <Plus className="h-4 w-4 stroke-[2.8]" />
-              <span>Create First Plan</span>
+              <span>{COPY.FIRE.EMPTY_BTN}</span>
             </button>
           }
         />
@@ -405,13 +408,6 @@ export const FireView: React.FC<FireViewProps> = ({
         </div>
       ) : null}
 
-      {/* Date of Birth Modal */}
-      <DobModal
-        isOpen={isDobModalOpen}
-        onClose={() => setIsDobModalOpen(false)}
-        onSave={handleSaveDob}
-        initialDob={user?.dob}
-      />
 
       {/* New Scenario Modal */}
       <NewScenarioModal

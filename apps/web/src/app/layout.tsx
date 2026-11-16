@@ -6,7 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Piggybank | Personal Wealth OS",
   description:
-    "Track your global assets, debts, and multi-currency net worth seamlessly with Piggybank — the personal wealth OS.",
+    "Track your global assets, liabilities, and multi-currency net worth seamlessly with Piggybank — the personal wealth OS.",
   keywords: [
     "piggybank",
     "personal wealth os",
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     "multi-currency",
     "wealth tracker",
     "portfolio manager",
-    "debt manager",
+    "liability tracker",
   ],
   authors: [{ name: "Cyril Pillai" }],
   icons: {

@@ -2,7 +2,8 @@
 
 import React from "react";
 import { FireCalculationMetrics } from "@/types";
-import { formatCurrencyAmount } from "@/lib/format";
+import { formatCurrencyAmount, formatCompactCurrency, formatYearsVariance } from "@/lib/format";
+import { COPY } from "@/constants/copy";
 import { Target, Clock, Wallet, ShieldCheck, AlertCircle, Sparkles } from "lucide-react";
 
 interface FireKpiCardsProps {
@@ -21,18 +22,15 @@ export const FireKpiCards: React.FC<FireKpiCardsProps> = ({
   const formatCurrency = (val: number | string) => {
     const num = Number(val);
     if (isNaN(num)) return `${currencySymbol}0`;
-    if (baseCurrency === "INR") {
-      if (num >= 10000000) return `${currencySymbol}${(num / 10000000).toFixed(2)} Cr`;
-      if (num >= 100000) return `${currencySymbol}${(num / 100000).toFixed(2)} L`;
+    if (Math.abs(num) >= 1e4) {
+      return `${currencySymbol}${formatCompactCurrency(num, baseCurrency).compact}`;
     }
     return `${currencySymbol}${formatCurrencyAmount(num, baseCurrency, 0)}`;
   };
 
   const gapNum = Number(metrics.gap_vs_current) || 0;
   const isSurplus = gapNum >= 0;
-
-  const varianceNum = metrics.full_fi_timeline_variance;
-  const isAhead = varianceNum !== null && varianceNum !== undefined && varianceNum >= 0;
+  const timeline = formatYearsVariance(metrics.full_fi_timeline_variance, goalAge);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -83,28 +81,23 @@ export const FireKpiCards: React.FC<FireKpiCardsProps> = ({
         </div>
 
         <div className="mt-4 pt-3 border-t border-white/[0.06]">
-          {varianceNum !== null && varianceNum !== undefined ? (
+          {timeline.hasVariance ? (
             <span
               className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold ${
-                isAhead
+                timeline.isAhead
                   ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
                   : "bg-amber-500/15 text-amber-300 border border-amber-500/30"
               }`}
             >
-              {isAhead ? (
-                <>
-                  <Sparkles className="h-3 w-3" />
-                  <span>+{Math.abs(varianceNum).toFixed(1)}y ahead of goal ({goalAge})</span>
-                </>
+              {timeline.isAhead ? (
+                <Sparkles className="h-3 w-3" />
               ) : (
-                <>
-                  <AlertCircle className="h-3 w-3" />
-                  <span>-{Math.abs(varianceNum).toFixed(1)}y behind goal ({goalAge})</span>
-                </>
+                <AlertCircle className="h-3 w-3" />
               )}
+              <span>{timeline.text}</span>
             </span>
           ) : (
-            <span className="text-[11px] text-slate-500">Need higher savings rate</span>
+            <span className="text-[11px] text-slate-500">{timeline.text}</span>
           )}
         </div>
       </div>

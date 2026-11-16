@@ -20,6 +20,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { formatCurrencyAmount, convertToBaseCurrency } from "@/lib/format";
+import { COPY } from "@/constants/copy";
 import { GlassSelect, SelectOption } from "@/components/ui/GlassSelect";
 import { GlassEmptyState } from "@/components/ui/GlassEmptyState";
 import { GlassSearchInput } from "@/components/ui/GlassSearchInput";
@@ -273,14 +274,14 @@ export const AssetList: React.FC<AssetListProps> = ({
       <GlassEmptyState
         icon={<TrendingUp className="h-7 w-7 stroke-[2.2]" />}
         iconColor="emerald"
-        title="Your Piggybank is Empty!"
-        description="Feed your piggybank with your savings, stocks, mutual funds, real estate, or gold to watch your wealth grow."
+        title={COPY.ASSETS.EMPTY_TITLE}
+        description={COPY.ASSETS.EMPTY_DESC}
         action={
           <button
             onClick={onAddNew}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl ios-btn-primary text-sm shadow-glass-glow"
           >
-            <span>Feed the Piggybank (Add Asset)</span>
+            <span>{COPY.ASSETS.ADD_NEW}</span>
           </button>
         }
       />
@@ -298,14 +299,14 @@ export const AssetList: React.FC<AssetListProps> = ({
             <GlassSearchInput
               value={searchQuery}
               onChange={setSearchQuery}
-              placeholder="Search assets by name, institution, notes..."
+              placeholder={COPY.ASSETS.SEARCH_PLACEHOLDER}
             />
 
             {/* Sort Dropdown */}
             <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
               <span className="text-xs text-slate-400 font-medium hidden md:inline flex items-center gap-1">
                 <SlidersHorizontal className="h-3.5 w-3.5" />
-                Sort:
+                {COPY.COMMON.SORT}
               </span>
               <GlassSelect
                 value={sortBy}
@@ -391,14 +392,14 @@ export const AssetList: React.FC<AssetListProps> = ({
           {/* Status / Count / Filtered Total Bar */}
           <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-[11px] text-slate-400 font-medium">
             <div>
-              <span>Showing </span>
+              <span>{COPY.ASSETS.SHOWING} </span>
               <strong className="text-white">{filteredAssets.length}</strong>
-              <span> of </span>
+              <span> {COPY.ASSETS.OF} </span>
               <strong className="text-white">{assets.length}</strong>
-              <span> assets</span>
+              <span> {COPY.ASSETS.LABEL_PLURAL}</span>
             </div>
             <div>
-              <span>Filtered Total: </span>
+              <span>{COPY.ASSETS.FILTERED_TOTAL} </span>
               <strong className="text-emerald-400 font-bold">
                 {formatCurrencyAmount(filteredTotal, baseCurrency)} {baseCurrency}
               </strong>
@@ -412,8 +413,8 @@ export const AssetList: React.FC<AssetListProps> = ({
         <GlassEmptyState
           icon={<Search className="h-6 w-6 stroke-[1.8]" />}
           iconColor="slate"
-          title="No assets match your filters"
-          description="Try adjusting your search keywords, switching categories, or resetting active filters."
+          title={COPY.ASSETS.EMPTY_SEARCH_TITLE}
+          description={COPY.ASSETS.EMPTY_SEARCH_DESC}
           action={
             hasActiveFilters ? (
               <button
@@ -421,7 +422,7 @@ export const AssetList: React.FC<AssetListProps> = ({
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl ios-btn-secondary text-xs"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
-                <span>Reset all filters</span>
+                <span>{COPY.ASSETS.RESET_FILTERS}</span>
               </button>
             ) : null
           }
@@ -440,7 +441,7 @@ export const AssetList: React.FC<AssetListProps> = ({
                     title="Sort by Name"
                   >
                     <div className="flex items-center gap-1">
-                      <span>Asset Name</span>
+                      <span>{COPY.ASSETS.TABLE_HEADER_NAME}</span>
                       {renderSortIcon("name")}
                     </div>
                   </th>
@@ -451,11 +452,11 @@ export const AssetList: React.FC<AssetListProps> = ({
                     title="Sort by Category"
                   >
                     <div className="flex items-center gap-1">
-                      <span>Category & Sub Category</span>
+                      <span>{COPY.ASSETS.TABLE_HEADER_CATEGORY}</span>
                       {renderSortIcon("category")}
                     </div>
                   </th>
-                  <th scope="col" className="px-6 py-4">Institution</th>
+                  <th scope="col" className="px-6 py-4">{COPY.ASSETS.TABLE_HEADER_INSTITUTION}</th>
                   <th
                     scope="col"
                     onClick={() => handleHeaderSort("amount")}
@@ -463,7 +464,7 @@ export const AssetList: React.FC<AssetListProps> = ({
                     title="Sort by Amount"
                   >
                     <div className="flex items-center justify-end gap-1">
-                      <span>Amount</span>
+                      <span>{COPY.ASSETS.TABLE_HEADER_AMOUNT}</span>
                       {renderSortIcon("amount")}
                     </div>
                   </th>

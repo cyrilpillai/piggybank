@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import { TrajectoryPoint } from "@/types";
-import { formatCurrencyAmount } from "@/lib/format";
+import { formatCurrencyAmount, formatCompactCurrency } from "@/lib/format";
 
 interface FireTrajectoryChartProps {
   trajectory: TrajectoryPoint[];
@@ -26,11 +26,9 @@ export const FireTrajectoryChart: React.FC<FireTrajectoryChartProps> = ({
   const formatCurrency = (val: number | string) => {
     const num = Number(val);
     if (isNaN(num)) return `${currencySymbol}0`;
-    if (baseCurrency === "INR") {
-      if (num >= 10000000) return `${currencySymbol}${(num / 10000000).toFixed(2)} Cr`;
-      if (num >= 100000) return `${currencySymbol}${(num / 100000).toFixed(2)} L`;
+    if (Math.abs(num) >= 1e4) {
+      return `${currencySymbol}${formatCompactCurrency(num, baseCurrency).compact}`;
     }
-    if (num >= 1000 && baseCurrency !== "INR") return `${currencySymbol}${(num / 1000).toFixed(1)}k`;
     return `${currencySymbol}${formatCurrencyAmount(num, baseCurrency, 0)}`;
   };
 

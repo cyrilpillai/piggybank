@@ -181,7 +181,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                 </span>
               </h1>
               <p className="text-sm sm:text-base text-slate-300 max-w-xl leading-relaxed">
-                Track your bank accounts, stocks, real estate, and debts across 10+ global currencies. 
+                Track your bank accounts, stocks, real estate, and liabilities across 10+ global currencies. 
                 Piggybank auto-normalizes your finances with official European Central Bank FX reference rates in a private, distraction-free ledger.
               </p>
             </div>
@@ -233,7 +233,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-rose-400" />
-                    <span className="text-slate-400 text-[11px]">Debts:</span>
+                    <span className="text-slate-400 text-[11px]">Liabilities:</span>
                     <span className="font-bold text-slate-200 text-[11px]">$36,750.00</span>
                     <span className="text-[10px] text-emerald-400 font-semibold bg-emerald-500/10 px-1.5 py-0.5 rounded">
                       DTI 19.8%
@@ -276,7 +276,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                 <div className="h-8 w-8 rounded-xl bg-teal-500/15 border border-teal-500/20 flex items-center justify-center text-teal-400 mb-1">
                   <TrendingUp className="h-4 w-4" />
                 </div>
-                <div className="text-xs font-bold text-white">Asset & Debt Ledger</div>
+                <div className="text-xs font-bold text-white">Asset & Liability Ledger</div>
                 <p className="text-[11px] text-slate-400 leading-snug">
                   Track real estate, stocks, bank deposits, and credit cards side-by-side.
                 </p>
@@ -481,7 +481,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
           <span>•</span>
           <span>Multi-Currency Normalization</span>
           <span>•</span>
-          <span>Debt-to-Asset Ratios</span>
+          <span>Liability-to-Asset Ratios</span>
         </div>
       </footer>
     </div>

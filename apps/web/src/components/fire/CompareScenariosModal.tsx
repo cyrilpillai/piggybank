@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { FireScenario, FireScenarioSummary } from "@/types";
-import { formatCurrencyAmount } from "@/lib/format";
+import { formatCurrencyAmount, formatCompactCurrency, formatPercent } from "@/lib/format";
 import { api } from "@/lib/api";
 import { Layers, Check } from "lucide-react";
 import { GlassModal } from "@/components/ui/GlassModal";
@@ -67,11 +67,9 @@ export const CompareScenariosModal: React.FC<CompareScenariosModalProps> = ({
   const formatCurrency = (val: number | string) => {
     const num = Number(val);
     if (isNaN(num)) return `${currencySymbol}0`;
-    if (baseCurrency === "INR") {
-      if (num >= 10000000) return `${currencySymbol}${(num / 10000000).toFixed(2)} Cr`;
-      if (num >= 100000) return `${currencySymbol}${(num / 100000).toFixed(2)} L`;
+    if (Math.abs(num) >= 1e4) {
+      return `${currencySymbol}${formatCompactCurrency(num, baseCurrency).compact}`;
     }
-    if (num >= 1000 && baseCurrency !== "INR") return `${currencySymbol}${(num / 1000).toFixed(1)}k`;
     return `${currencySymbol}${formatCurrencyAmount(num, baseCurrency, 0)}`;
   };
 
@@ -193,7 +191,7 @@ export const CompareScenariosModal: React.FC<CompareScenariosModalProps> = ({
                   <td className="py-3 px-4 font-medium text-slate-400">Safe Withdrawal Rate</td>
                   {comparedData.map((sc) => (
                     <td key={sc.id} className="py-3 px-4 font-mono text-amber-300">
-                      {(sc.swr * 100).toFixed(2)}%
+                      {formatPercent(sc.swr * 100, 2, { floor: true })}
                     </td>
                   ))}
                 </tr>
@@ -202,7 +200,7 @@ export const CompareScenariosModal: React.FC<CompareScenariosModalProps> = ({
                   <td className="py-3 px-4 font-medium text-slate-400">Annual Return Expected</td>
                   {comparedData.map((sc) => (
                     <td key={sc.id} className="py-3 px-4 font-mono">
-                      {(sc.expected_annual_return * 100).toFixed(1)}%
+                      {formatPercent(sc.expected_annual_return * 100, 1, { floor: true })}
                     </td>
                   ))}
                 </tr>
@@ -211,7 +209,7 @@ export const CompareScenariosModal: React.FC<CompareScenariosModalProps> = ({
                   <td className="py-3 px-4 font-medium text-slate-400">Expected Inflation</td>
                   {comparedData.map((sc) => (
                     <td key={sc.id} className="py-3 px-4 font-mono">
-                      {(sc.inflation * 100).toFixed(1)}%
+                      {formatPercent(sc.inflation * 100, 1, { floor: true })}
                     </td>
                   ))}
                 </tr>
@@ -237,7 +235,7 @@ export const CompareScenariosModal: React.FC<CompareScenariosModalProps> = ({
                   <td className="py-3 px-4 font-medium text-slate-400">Real Return Rate</td>
                   {comparedData.map((sc) => (
                     <td key={sc.id} className="py-3 px-4 font-mono">
-                      {sc.metrics.real_return_rate.toFixed(2)}%
+                      {formatPercent(sc.metrics.real_return_rate, 2, { floor: true })}
                     </td>
                   ))}
                 </tr>

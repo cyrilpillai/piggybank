@@ -5,6 +5,7 @@ import { Asset, CurrencyItem, ASSET_CATEGORIES_MAP, ASSET_CATEGORIES, isSubCateg
 import { TrendingUp, Flame, ShieldCheck } from "lucide-react";
 import { GlassSelect } from "@/components/ui/GlassSelect";
 import { GlassModal } from "@/components/ui/GlassModal";
+import { COPY } from "@/constants/copy";
 
 interface AssetModalProps {
   isOpen: boolean;
@@ -76,12 +77,12 @@ export const AssetModal: React.FC<AssetModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      setError("Please enter an asset name.");
+      setError(COPY.ASSETS.VALIDATION_NAME);
       return;
     }
     const parsedAmount = parseFloat(amount);
     if (isNaN(parsedAmount) || parsedAmount <= 0) {
-      setError("Please enter a valid positive asset amount.");
+      setError(COPY.ASSETS.VALIDATION_AMOUNT);
       return;
     }
 
@@ -118,8 +119,8 @@ export const AssetModal: React.FC<AssetModalProps> = ({
     <GlassModal
       isOpen={isOpen}
       onClose={onClose}
-      title={editingAsset ? "Edit Asset" : "Add New Asset"}
-      description="Track your holdings across any global currency"
+      title={editingAsset ? COPY.ASSETS.MODAL_TITLE_EDIT : COPY.ASSETS.MODAL_TITLE_ADD}
+      description={COPY.ASSETS.MODAL_DESC}
       icon={<TrendingUp className="h-5 w-5" />}
       iconColor="emerald"
       maxWidth="3xl"
@@ -133,7 +134,7 @@ export const AssetModal: React.FC<AssetModalProps> = ({
             disabled={isSubmitting}
             className="px-5 py-2.5 rounded-2xl ios-btn-secondary text-sm"
           >
-            Cancel
+            {COPY.COMMON.CANCEL}
           </button>
           <button
             type="submit"
@@ -141,7 +142,7 @@ export const AssetModal: React.FC<AssetModalProps> = ({
             disabled={isSubmitting}
             className="px-6 py-2.5 rounded-2xl ios-btn-primary text-sm shadow-glass-glow"
           >
-            {isSubmitting ? "Saving to Piggybank..." : editingAsset ? "Update Asset" : "Save Asset"}
+            {isSubmitting ? COPY.ASSETS.SAVING_BUTTON : editingAsset ? COPY.ASSETS.UPDATE_BUTTON : COPY.ASSETS.SAVE_BUTTON}
           </button>
         </>
       }

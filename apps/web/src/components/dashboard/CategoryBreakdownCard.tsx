@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import { CategoryBreakdown } from "@/types";
 import { TrendingUp, TrendingDown, Inbox, ChevronDown } from "lucide-react";
-import { formatCurrencyAmount } from "@/lib/format";
+import { formatCurrencyAmount, formatPercent } from "@/lib/format";
 import { GlassEmptyState } from "@/components/ui/GlassEmptyState";
+import { COPY } from "@/constants/copy";
 
 interface CategoryBreakdownCardProps {
   title: string;
@@ -77,17 +78,15 @@ export const CategoryBreakdownCard: React.FC<CategoryBreakdownCardProps> = ({
           <GlassEmptyState
             icon={<Inbox className="h-6 w-6 stroke-[1.8]" />}
             iconColor="slate"
-            title={`No ${isAsset ? "assets" : "liabilities"} added yet.`}
-            description={`Add your first ${
-              isAsset ? "holdings (e.g. Demat, bank savings)" : "debt (e.g. home loan, credit card)"
-            } to see the category breakdown.`}
+            title={isAsset ? COPY.CATEGORIES.EMPTY_ASSETS_TITLE : COPY.CATEGORIES.EMPTY_LIABILITIES_TITLE}
+            description={isAsset ? COPY.CATEGORIES.EMPTY_ASSETS_DESC : COPY.CATEGORIES.EMPTY_LIABILITIES_DESC}
             className="my-2"
             action={
               <button
                 onClick={onAddItem}
                 className="px-5 py-2.5 rounded-2xl text-xs font-bold ios-btn-primary shadow-glass-glow"
               >
-                + Add {isAsset ? "Asset" : "Liability"}
+                {isAsset ? COPY.CATEGORIES.ADD_ASSET_BTN : COPY.CATEGORIES.ADD_LIABILITY_BTN}
               </button>
             }
           />
@@ -130,7 +129,7 @@ export const CategoryBreakdownCard: React.FC<CategoryBreakdownCardProps> = ({
                           {formatAmount(cat.total_amount)}
                         </span>
                         <span className="text-slate-400 font-semibold w-10 text-right">
-                          {cat.percentage}%
+                          {formatPercent(cat.percentage, 1)}
                         </span>
                       </div>
                     </div>

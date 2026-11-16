@@ -17,7 +17,8 @@ import {
   Percent,
   Layers,
 } from "lucide-react";
-import { formatCurrencyAmount, convertToBaseCurrency } from "@/lib/format";
+import { formatCurrencyAmount, convertToBaseCurrency, formatPercent } from "@/lib/format";
+import { COPY } from "@/constants/copy";
 import { GlassSelect, SelectOption } from "@/components/ui/GlassSelect";
 import { GlassEmptyState } from "@/components/ui/GlassEmptyState";
 import { GlassSearchInput } from "@/components/ui/GlassSearchInput";
@@ -206,7 +207,7 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
     rates,
   ]);
 
-  // Total balance of filtered debts in base currency
+  // Total balance of filtered liabilities in base currency
   const filteredTotal = useMemo(() => {
     return filteredLiabilities.reduce((sum, item) => sum + getNormalizedAmount(item), 0);
   }, [filteredLiabilities, baseCurrency, rates]);
@@ -240,14 +241,14 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
       <GlassEmptyState
         icon={<TrendingDown className="h-7 w-7 stroke-[2.2]" />}
         iconColor="rose"
-        title="Zero Debt? Piggy is Dancing! 🎉"
-        description="If you have home loans, student debt, car loans, or credit cards, add them here to keep your net worth calculations honest."
+        title={COPY.LIABILITIES.EMPTY_TITLE}
+        description={COPY.LIABILITIES.EMPTY_DESC}
         action={
           <button
             onClick={onAddNew}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl ios-btn-primary text-sm shadow-glass-glow"
           >
-            <span>Track a Loan / Liability</span>
+            <span>{COPY.LIABILITIES.ADD_NEW}</span>
           </button>
         }
       />
@@ -265,14 +266,14 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
             <GlassSearchInput
               value={searchQuery}
               onChange={setSearchQuery}
-              placeholder="Search debts by name, lender, notes..."
+              placeholder={COPY.LIABILITIES.SEARCH_PLACEHOLDER}
             />
 
             {/* Sort Dropdown */}
             <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
               <span className="text-xs text-slate-400 font-medium hidden md:inline flex items-center gap-1">
                 <SlidersHorizontal className="h-3.5 w-3.5" />
-                Sort:
+                {COPY.COMMON.SORT}
               </span>
               <GlassSelect
                 value={sortBy}
@@ -338,14 +339,14 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
           {/* Status / Count / Filtered Total Bar */}
           <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-[11px] text-slate-400 font-medium">
             <div>
-              <span>Showing </span>
+              <span>{COPY.LIABILITIES.SHOWING} </span>
               <strong className="text-white">{filteredLiabilities.length}</strong>
-              <span> of </span>
+              <span> {COPY.LIABILITIES.OF} </span>
               <strong className="text-white">{liabilities.length}</strong>
-              <span> debts</span>
+              <span> {COPY.LIABILITIES.LABEL_PLURAL}</span>
             </div>
             <div>
-              <span>Filtered Balance: </span>
+              <span>{COPY.LIABILITIES.FILTERED_TOTAL} </span>
               <strong className="text-rose-400 font-bold">
                 {formatCurrencyAmount(filteredTotal, baseCurrency)} {baseCurrency}
               </strong>
@@ -359,8 +360,8 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
         <GlassEmptyState
           icon={<Search className="h-6 w-6 stroke-[1.8]" />}
           iconColor="slate"
-          title="No debts match your filters"
-          description="Try adjusting your search query, switching categories, or resetting active filters."
+          title={COPY.LIABILITIES.EMPTY_SEARCH_TITLE}
+          description={COPY.LIABILITIES.EMPTY_SEARCH_DESC}
           action={
             hasActiveFilters ? (
               <button
@@ -368,7 +369,7 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-xl ios-btn-secondary text-xs"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
-                <span>Reset all filters</span>
+                <span>{COPY.LIABILITIES.RESET_FILTERS}</span>
               </button>
             ) : null
           }
@@ -387,7 +388,7 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
                     title="Sort by Name"
                   >
                     <div className="flex items-center gap-1">
-                      <span>Debt / Loan</span>
+                      <span>{COPY.LIABILITIES.TABLE_HEADER_NAME}</span>
                       {renderSortIcon("name")}
                     </div>
                   </th>
@@ -398,11 +399,11 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
                     title="Sort by Category"
                   >
                     <div className="flex items-center gap-1">
-                      <span>Category</span>
+                      <span>{COPY.LIABILITIES.TABLE_HEADER_CATEGORY}</span>
                       {renderSortIcon("category")}
                     </div>
                   </th>
-                  <th scope="col" className="px-6 py-4">Lender</th>
+                  <th scope="col" className="px-6 py-4">{COPY.LIABILITIES.TABLE_HEADER_LENDER}</th>
                   <th
                     scope="col"
                     onClick={() => handleHeaderSort("interest")}
@@ -410,7 +411,7 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
                     title="Sort by Interest Rate"
                   >
                     <div className="flex items-center gap-1">
-                      <span>Interest</span>
+                      <span>{COPY.LIABILITIES.TABLE_HEADER_INTEREST}</span>
                       {renderSortIcon("interest")}
                     </div>
                   </th>
@@ -421,7 +422,7 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
                     title="Sort by Balance"
                   >
                     <div className="flex items-center justify-end gap-1">
-                      <span>Balance</span>
+                      <span>{COPY.LIABILITIES.TABLE_HEADER_AMOUNT}</span>
                       {renderSortIcon("amount")}
                     </div>
                   </th>
@@ -455,7 +456,7 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
                     <td className="px-6 py-4 text-slate-400">
                       {item.interest_rate !== null && item.interest_rate !== undefined ? (
                         <span className="font-bold text-amber-300">
-                          {item.interest_rate}%
+                          {formatPercent(Number(item.interest_rate))}
                         </span>
                       ) : (
                         "—"
@@ -549,7 +550,7 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
 
                   {item.interest_rate !== null && item.interest_rate !== undefined && (
                     <div className="text-xs text-amber-300 font-bold pt-1 border-t border-white/[0.06]">
-                      <span>Interest Rate: {item.interest_rate}%</span>
+                      <span>Interest Rate: {formatPercent(Number(item.interest_rate))}</span>
                     </div>
                   )}
 

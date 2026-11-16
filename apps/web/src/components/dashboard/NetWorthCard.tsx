@@ -3,7 +3,8 @@
 import React from "react";
 import { NetWorthSummary } from "@/types";
 import { TrendingUp, TrendingDown, ShieldCheck, Plus, Sparkles } from "lucide-react";
-import { formatCompactCurrency } from "@/lib/format";
+import { formatCompactCurrency, formatPercent } from "@/lib/format";
+import { COPY } from "@/constants/copy";
 
 interface NetWorthCardProps {
   summary: NetWorthSummary;
@@ -37,7 +38,7 @@ export const NetWorthCard: React.FC<NetWorthCardProps> = ({
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-300">
-              Total Net Worth ({summary.base_currency})
+              {COPY.NET_WORTH.TOTAL_NET_WORTH} ({summary.base_currency})
             </span>
             <span className="ios-badge ios-badge-neutral text-[10px]">
               <Sparkles className="h-3 w-3 text-pink-300" />
@@ -63,19 +64,19 @@ export const NetWorthCard: React.FC<NetWorthCardProps> = ({
             <div className="flex items-center gap-1.5">
               <ShieldCheck className="h-4 w-4 text-emerald-400" />
               <span>
-                Debt Ratio: <strong className="text-white font-bold">{summary.debt_to_asset_ratio}%</strong>
+                {COPY.NET_WORTH.LIABILITY_RATIO}: <strong className="text-white font-bold">{formatPercent(summary.debt_to_asset_ratio, 1)}</strong>
               </span>
             </div>
             <span>•</span>
             <div>
               <span>
-                Assets: <strong className="text-white font-bold">{summary.asset_count}</strong>
+                {COPY.NET_WORTH.ASSETS_COUNT}: <strong className="text-white font-bold">{summary.asset_count}</strong>
               </span>
             </div>
             <span>•</span>
             <div>
               <span>
-                Liabilities: <strong className="text-white font-bold">{summary.liability_count}</strong>
+                {COPY.NET_WORTH.LIABILITIES_COUNT}: <strong className="text-white font-bold">{summary.liability_count}</strong>
               </span>
             </div>
           </div>
@@ -88,7 +89,7 @@ export const NetWorthCard: React.FC<NetWorthCardProps> = ({
             className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl ios-btn-primary text-sm shadow-glass-glow"
           >
             <Plus className="h-4 w-4 stroke-[2.8]" />
-            <span>Add Asset</span>
+            <span>{COPY.NET_WORTH.ADD_ASSET}</span>
           </button>
 
           <button
@@ -96,7 +97,7 @@ export const NetWorthCard: React.FC<NetWorthCardProps> = ({
             className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl ios-btn-primary text-sm shadow-glass-glow"
           >
             <Plus className="h-4 w-4 stroke-[2.8]" />
-            <span>Add Debt</span>
+            <span>{COPY.NET_WORTH.ADD_LIABILITY}</span>
           </button>
         </div>
       </div>
@@ -108,7 +109,7 @@ export const NetWorthCard: React.FC<NetWorthCardProps> = ({
             <TrendingUp className="h-6 w-6 stroke-[2.2]" />
           </div>
           <div>
-            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Total Assets</span>
+            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">{COPY.NET_WORTH.TOTAL_ASSETS}</span>
             <div className="text-xl sm:text-2xl font-black text-white">
               {currencySymbol}{assets.compact}
             </div>
@@ -125,7 +126,7 @@ export const NetWorthCard: React.FC<NetWorthCardProps> = ({
             <TrendingDown className="h-6 w-6 stroke-[2.2]" />
           </div>
           <div>
-            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Total Liabilities</span>
+            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">{COPY.NET_WORTH.TOTAL_LIABILITIES}</span>
             <div className="text-xl sm:text-2xl font-black text-white">
               {currencySymbol}{liabilities.compact}
             </div>

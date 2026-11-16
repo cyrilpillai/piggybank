@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { FireScenario } from "@/types";
-import { formatCurrencyAmount } from "@/lib/format";
+import { formatCurrencyAmount, formatPercent } from "@/lib/format";
 import { Sliders, Save, RotateCcw, HelpCircle } from "lucide-react";
 import { GlassSlider } from "@/components/ui/GlassSlider";
 
@@ -275,7 +275,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
                 </span>
               </div>
             </div>
-            <span className="font-mono font-bold text-amber-300">{swr.toFixed(2)}%</span>
+            <span className="font-mono font-bold text-amber-300">{formatPercent(swr, 2)}</span>
           </div>
           <GlassSlider
             min={2.0}
@@ -299,7 +299,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
               <span className="w-2 h-2 rounded-full bg-pink-400 shadow-[0_0_8px_rgba(244,114,182,0.8)]" />
               <label className="font-semibold text-slate-200">Expected Annual Return</label>
             </div>
-            <span className="font-mono font-bold text-pink-400">{annualReturn.toFixed(1)}%</span>
+            <span className="font-mono font-bold text-pink-400">{formatPercent(annualReturn, 1)}</span>
           </div>
           <GlassSlider
             min={4.0}
@@ -323,7 +323,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
               <span className="w-2 h-2 rounded-full bg-slate-300 shadow-[0_0_8px_rgba(203,213,225,0.7)]" />
               <label className="font-semibold text-slate-200">Expected Annual Inflation</label>
             </div>
-            <span className="font-mono font-bold text-slate-300">{inflation.toFixed(1)}%</span>
+            <span className="font-mono font-bold text-slate-300">{formatPercent(inflation, 1)}</span>
           </div>
           <GlassSlider
             min={1.0}
@@ -347,7 +347,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
               <span className="w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,0.8)]" />
               <label className="font-semibold text-slate-200">Retirement Tax Rate</label>
             </div>
-            <span className="font-mono font-bold text-purple-300">{taxRate.toFixed(1)}%</span>
+            <span className="font-mono font-bold text-purple-300">{formatPercent(taxRate, 1)}</span>
           </div>
           <GlassSlider
             min={0.0}
@@ -371,7 +371,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
               <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
               <label className="font-semibold text-slate-200">Yearly Contribution Step-Up</label>
             </div>
-            <span className="font-mono font-bold text-emerald-300">{growthRate.toFixed(1)}%</span>
+            <span className="font-mono font-bold text-emerald-300">{formatPercent(growthRate, 1)}</span>
           </div>
           <GlassSlider
             min={0.0}

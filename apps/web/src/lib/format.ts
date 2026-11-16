@@ -17,9 +17,23 @@ const CURRENCY_LOCALES: Record<string, string> = {
 };
 
 /**
+ * Floors/truncates a number to a specified number of decimal places (always rounds down).
+ * E.g. floorToDecimals(3.85688719, 2) -> "3.85"
+ * E.g. floorToDecimals(14.559, 2) -> "14.55"
+ * Uses an epsilon of 1e-9 to prevent floating point inaccuracies.
+ */
+export function floorToDecimals(num: number, decimals: number): string {
+  if (isNaN(num)) return (0).toFixed(decimals);
+  const factor = Math.pow(10, decimals);
+  const floored = Math.floor(Math.abs(num) * factor + 1e-9) / factor;
+  return floored.toFixed(decimals);
+}
+
+/**
  * Standard grouping format according to currency standards.
  * E.g. 5000000 INR -> "50,00,000.00"
  * E.g. 5000000 USD -> "5,000,000.00"
+ * Always rounds down to fractionDigits instead of rounding up.
  */
 export function formatCurrencyAmount(
   amount: number | string,
@@ -33,16 +47,24 @@ export function formatCurrencyAmount(
   const locale = CURRENCY_LOCALES[code] || "en-US";
   const fractionDigits = code === "JPY" ? 0 : decimals;
 
+  const sign = num < 0 ? -1 : 1;
+  const abs = Math.abs(num);
+  const factor = Math.pow(10, fractionDigits);
+  const flooredAbs = Math.floor(abs * factor + 1e-9) / factor;
+  const flooredNum = sign * flooredAbs;
+
   return new Intl.NumberFormat(locale, {
     minimumFractionDigits: fractionDigits,
     maximumFractionDigits: fractionDigits,
-  }).format(num);
+  }).format(flooredNum);
 }
 
 /**
  * Readable compact currency formatting for overview hero cards and metric summaries.
+ * Always rounds down (floors) instead of rounding up.
  * E.g. when base is INR:
- *   14,553,195.50 -> "1.46 Cr"
+ *   38,568,871.90 -> "3.85 Cr" (not 3.86 Cr)
+ *   14,553,195.50 -> "1.45 Cr"
  *   5,000,000 -> "50 L"
  *   865,000 -> "8.65 L"
  *   45,000 -> "45 K"
@@ -70,19 +92,19 @@ export function formatCompactCurrency(
     // 1 Crore = 10,000,000 (10^7)
     if (abs >= 1e7) {
       const cr = abs / 1e7;
-      const formatted = cr >= 100 ? cr.toFixed(1) : cr.toFixed(2);
+      const formatted = cr >= 100 ? floorToDecimals(cr, 1) : floorToDecimals(cr, 2);
       return { compact: `${sign}${parseFloat(formatted)} Cr`, full };
     }
     // 1 Lakh = 100,000 (10^5)
     if (abs >= 1e5) {
       const l = abs / 1e5;
-      const formatted = l >= 100 ? l.toFixed(1) : l.toFixed(2);
+      const formatted = l >= 100 ? floorToDecimals(l, 1) : floorToDecimals(l, 2);
       return { compact: `${sign}${parseFloat(formatted)} L`, full };
     }
     // Thousands
     if (abs >= 1e4) {
       const k = abs / 1e3;
-      return { compact: `${sign}${parseFloat(k.toFixed(1))} K`, full };
+      return { compact: `${sign}${parseFloat(floorToDecimals(k, 1))} K`, full };
     }
     return { compact: full, full };
   }
@@ -90,15 +112,15 @@ export function formatCompactCurrency(
   // Western currencies (USD, EUR, GBP, CAD, etc.)
   if (abs >= 1e9) {
     const b = abs / 1e9;
-    return { compact: `${sign}${parseFloat(b.toFixed(2))} B`, full };
+    return { compact: `${sign}${parseFloat(floorToDecimals(b, 2))} B`, full };
   }
   if (abs >= 1e6) {
     const m = abs / 1e6;
-    return { compact: `${sign}${parseFloat(m.toFixed(2))} M`, full };
+    return { compact: `${sign}${parseFloat(floorToDecimals(m, 2))} M`, full };
   }
   if (abs >= 1e4) {
     const k = abs / 1e3;
-    return { compact: `${sign}${parseFloat(k.toFixed(1))} K`, full };
+    return { compact: `${sign}${parseFloat(floorToDecimals(k, 1))} K`, full };
   }
 
   return { compact: full, full };
@@ -163,3 +185,94 @@ export function formatDob(dob: string | null | undefined): string {
   }
   return dob;
 }
+
+/**
+ * Formats a percentage value consistently across the product.
+ * E.g. formatPercent(3.5, 1) -> "3.5%"
+ * E.g. formatPercent(4, 0) -> "4%"
+ * E.g. formatPercent(3.567, 2, { floor: true }) -> "3.56%"
+ */
+export function formatPercent(
+  value: number | string,
+  decimals = 1,
+  options?: { floor?: boolean; trimZero?: boolean }
+): string {
+  const num = typeof value === "string" ? parseFloat(value) : value;
+  if (isNaN(num)) return "0%";
+
+  const formatted = options?.floor
+    ? floorToDecimals(num, decimals)
+    : num.toFixed(decimals);
+
+  if (options?.trimZero && Number.isInteger(num)) {
+    return `${parseInt(formatted, 10)}%`;
+  }
+
+  return `${formatted}%`;
+}
+
+/**
+ * Formats a multiplier (e.g. 25x, 33.3x) consistently.
+ */
+export function formatMultiplier(multiple: number | string, decimals = 1): string {
+  const num = typeof multiple === "string" ? parseFloat(multiple) : multiple;
+  if (isNaN(num) || num <= 0) return "0x";
+  const floored = floorToDecimals(num, decimals);
+  return `${parseFloat(floored)}x`;
+}
+
+/**
+ * Formats timeline variance in years relative to target retirement goal age.
+ * E.g. +1.2y ahead of goal (55) / -0.5y behind goal (55) / Right on track (55)
+ */
+export function formatYearsVariance(
+  variance: number | null | undefined,
+  goalAge?: number
+): { text: string; isAhead: boolean; isExact: boolean; hasVariance: boolean } {
+  if (variance === null || variance === undefined) {
+    return {
+      text: "Need higher savings rate",
+      isAhead: false,
+      isExact: false,
+      hasVariance: false,
+    };
+  }
+
+  const ageSuffix = goalAge ? ` (${goalAge})` : "";
+  const absYears = floorToDecimals(Math.abs(variance), 1);
+
+  if (Math.abs(variance) < 0.05) {
+    return {
+      text: `Right on track${ageSuffix}`,
+      isAhead: true,
+      isExact: true,
+      hasVariance: true,
+    };
+  }
+
+  if (variance > 0) {
+    return {
+      text: `+${absYears}y ahead of goal${ageSuffix}`,
+      isAhead: true,
+      isExact: false,
+      hasVariance: true,
+    };
+  }
+
+  return {
+    text: `-${absYears}y behind goal${ageSuffix}`,
+    isAhead: false,
+    isExact: false,
+    hasVariance: true,
+  };
+}
+
+/**
+ * Formats age into standard text display.
+ * E.g. formatAge(30) -> "30 yrs"
+ */
+export function formatAge(age: number | null | undefined): string {
+  if (age === null || age === undefined || isNaN(age)) return "";
+  return `${age} yrs`;
+}
+

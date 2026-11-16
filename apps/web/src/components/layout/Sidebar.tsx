@@ -2,6 +2,7 @@
 
 import React from "react";
 import { LayoutDashboard, TrendingUp, TrendingDown, Sparkles, Flame } from "lucide-react";
+import { COPY } from "@/constants/copy";
 
 export type TabType = "dashboard" | "assets" | "liabilities" | "fire";
 
@@ -21,25 +22,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const navItems = [
     {
       id: "dashboard" as TabType,
-      label: "Overview",
+      label: COPY.NAV.OVERVIEW,
       icon: LayoutDashboard,
       badge: null,
     },
     {
       id: "assets" as TabType,
-      label: "Assets Ledger",
+      label: COPY.NAV.ASSETS,
       icon: TrendingUp,
       badge: assetCount,
     },
     {
       id: "liabilities" as TabType,
-      label: "Debts & Loans",
+      label: COPY.NAV.LIABILITIES,
       icon: TrendingDown,
       badge: liabilityCount,
     },
     {
       id: "fire" as TabType,
-      label: "FIRE Planner",
+      label: COPY.NAV.FIRE,
       icon: Flame,
       badge: null,
     },
