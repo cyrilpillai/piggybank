@@ -17,7 +17,13 @@ import {
   Percent,
   Layers,
 } from "lucide-react";
-import { formatCurrencyAmount, convertToBaseCurrency, formatPercent } from "@/lib/format";
+import {
+  formatCurrencyAmount,
+  convertToBaseCurrency,
+  formatPercent,
+  formatCompactWithSymbol,
+  getCurrencySymbol,
+} from "@/lib/format";
 import { COPY } from "@/constants/copy";
 import { GlassSelect, SelectOption } from "@/components/ui/GlassSelect";
 import { GlassEmptyState } from "@/components/ui/GlassEmptyState";
@@ -31,6 +37,7 @@ interface LiabilityListProps {
   baseCurrency?: string;
   rates?: Record<string, number>;
   showFilters?: boolean;
+  compactAmounts?: boolean;
 }
 
 export type LiabilitySortValue =
@@ -71,6 +78,7 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
   baseCurrency = "INR",
   rates = {},
   showFilters = true,
+  compactAmounts = false,
 }) => {
   // --- Filter and Sort State ---
   const [searchQuery, setSearchQuery] = useState("");
@@ -88,7 +96,7 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
   const categoryOptions: SelectOption[] = useMemo(() => {
     const cats = Array.from(new Set(liabilities.map((l) => l.category).filter(Boolean))).sort();
     return [
-      { value: "ALL", label: "All Categories" },
+      { value: "ALL", label: "All Types" },
       ...cats.map((c) => ({ value: c, label: c })),
     ];
   }, [liabilities]);
@@ -99,7 +107,14 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
     ).sort();
     return [
       { value: "ALL", label: "All Currencies" },
-      ...currs.map((c) => ({ value: c, label: c })),
+      ...currs.map((c) => {
+        const symbol = getCurrencySymbol(c);
+        return {
+          value: c,
+          label: `${c} (${symbol})`,
+          symbol,
+        };
+      }),
     ];
   }, [liabilities]);
 
@@ -348,7 +363,7 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
             <div>
               <span>{COPY.LIABILITIES.FILTERED_TOTAL} </span>
               <strong className="text-rose-400 font-bold">
-                {formatCurrencyAmount(filteredTotal, baseCurrency)} {baseCurrency}
+                {getCurrencySymbol(baseCurrency)}{formatCurrencyAmount(filteredTotal, baseCurrency)}
               </strong>
             </div>
           </div>
@@ -396,7 +411,7 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
                     scope="col"
                     onClick={() => handleHeaderSort("category")}
                     className="px-6 py-4 cursor-pointer hover:text-white transition-colors select-none group"
-                    title="Sort by Category"
+                    title="Sort by Type"
                   >
                     <div className="flex items-center gap-1">
                       <span>{COPY.LIABILITIES.TABLE_HEADER_CATEGORY}</span>
@@ -466,19 +481,37 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
                       {(() => {
                         const isDiff = item.currency.toUpperCase() !== baseCurrency.toUpperCase();
                         const converted = convertToBaseCurrency(item.amount, item.currency, baseCurrency, rates);
+                        const fullAmount = `${getCurrencySymbol(item.currency)}${formatCurrencyAmount(item.amount, item.currency)}`;
+                        const convertedFull = `${getCurrencySymbol(baseCurrency)}${formatCurrencyAmount(converted, baseCurrency)}`;
+
+                        if (compactAmounts) {
+                          const compactStr = formatCompactWithSymbol(item.amount, item.currency);
+                          const convertedCompact = formatCompactWithSymbol(converted, baseCurrency);
+                          return (
+                            <div className="flex flex-col items-end" title={fullAmount}>
+                              <span className="text-base font-black text-white">
+                                {compactStr}
+                              </span>
+                              {isDiff && (
+                                <span
+                                  className="text-xs font-semibold text-slate-400 mt-0.5"
+                                  title={convertedFull}
+                                >
+                                  ≈ {convertedCompact}
+                                </span>
+                              )}
+                            </div>
+                          );
+                        }
+
                         return (
                           <div className="flex flex-col items-end">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-base font-black text-white">
-                                {formatCurrencyAmount(item.amount, item.currency)}
-                              </span>
-                              <span className="ios-badge ios-badge-neutral text-xs text-rose-300">
-                                {item.currency}
-                              </span>
-                            </div>
+                            <span className="text-base font-black text-white">
+                              {getCurrencySymbol(item.currency)}{formatCurrencyAmount(item.amount, item.currency)}
+                            </span>
                             {isDiff && (
                               <span className="text-xs font-semibold text-slate-400 mt-0.5">
-                                ≈ {formatCurrencyAmount(converted, baseCurrency)} {baseCurrency}
+                                ≈ {getCurrencySymbol(baseCurrency)}{formatCurrencyAmount(converted, baseCurrency)}
                               </span>
                             )}
                           </div>
@@ -534,17 +567,45 @@ export const LiabilityList: React.FC<LiabilityListProps> = ({
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-lg font-black text-white">
-                        {formatCurrencyAmount(item.amount, item.currency)}
-                      </div>
-                      <span className="ios-badge ios-badge-neutral text-[10px] text-rose-300">
-                        {item.currency}
-                      </span>
-                      {isDiff && (
-                        <div className="text-[11px] font-semibold text-slate-400 mt-0.5">
-                          ≈ {formatCurrencyAmount(converted, baseCurrency)} {baseCurrency}
-                        </div>
-                      )}
+                      {(() => {
+                        const isDiff = item.currency.toUpperCase() !== baseCurrency.toUpperCase();
+                        const converted = convertToBaseCurrency(item.amount, item.currency, baseCurrency, rates);
+                        const fullAmount = `${getCurrencySymbol(item.currency)}${formatCurrencyAmount(item.amount, item.currency)}`;
+                        const convertedFull = `${getCurrencySymbol(baseCurrency)}${formatCurrencyAmount(converted, baseCurrency)}`;
+
+                        if (compactAmounts) {
+                          const compactStr = formatCompactWithSymbol(item.amount, item.currency);
+                          const convertedCompact = formatCompactWithSymbol(converted, baseCurrency);
+                          return (
+                            <div title={fullAmount}>
+                              <div className="text-lg font-black text-white">
+                                {compactStr}
+                              </div>
+                              {isDiff && (
+                                <div
+                                  className="text-[11px] font-semibold text-slate-400 mt-0.5"
+                                  title={convertedFull}
+                                >
+                                  ≈ {convertedCompact}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <>
+                            <div className="text-lg font-black text-white">
+                              {getCurrencySymbol(item.currency)}{formatCurrencyAmount(item.amount, item.currency)}
+                            </div>
+                            {isDiff && (
+                              <div className="text-[11px] font-semibold text-slate-400 mt-0.5">
+                                ≈ {getCurrencySymbol(baseCurrency)}{formatCurrencyAmount(converted, baseCurrency)}
+                              </div>
+                            )}
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
 

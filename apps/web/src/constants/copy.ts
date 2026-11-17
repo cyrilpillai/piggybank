@@ -50,7 +50,7 @@ export const COPY = {
     LABEL_PLURAL: "assets",
     FILTERED_TOTAL: "Filtered Balance:",
     TABLE_HEADER_NAME: "Asset / Holding",
-    TABLE_HEADER_CATEGORY: "Category",
+    TABLE_HEADER_CATEGORY: "Type & Sub-type",
     TABLE_HEADER_INSTITUTION: "Institution",
     TABLE_HEADER_AMOUNT: "Balance",
     EMPTY_TITLE: "No assets recorded yet",
@@ -58,7 +58,7 @@ export const COPY = {
       "Add your bank accounts, stocks, real estate, or retirement funds to start building your net worth portfolio.",
     EMPTY_SEARCH_TITLE: "No assets match your filters",
     EMPTY_SEARCH_DESC:
-      "Try adjusting your search query, switching categories, or resetting active filters.",
+      "Try adjusting your search query, switching types, or resetting active filters.",
     RESET_FILTERS: "Reset all filters",
     MODAL_TITLE_ADD: "Add New Asset",
     MODAL_TITLE_EDIT: "Edit Asset",
@@ -85,7 +85,7 @@ export const COPY = {
     LABEL_PLURAL: "liabilities",
     FILTERED_TOTAL: "Filtered Balance:",
     TABLE_HEADER_NAME: "Liability",
-    TABLE_HEADER_CATEGORY: "Category",
+    TABLE_HEADER_CATEGORY: "Type",
     TABLE_HEADER_LENDER: "Lender",
     TABLE_HEADER_INTEREST: "Interest",
     TABLE_HEADER_AMOUNT: "Balance",
@@ -94,7 +94,7 @@ export const COPY = {
       "If you have mortgages, personal loans, car loans, or credit cards, add them here to keep your net worth calculations honest.",
     EMPTY_SEARCH_TITLE: "No liabilities match your filters",
     EMPTY_SEARCH_DESC:
-      "Try adjusting your search query, switching categories, or resetting active filters.",
+      "Try adjusting your search query, switching types, or resetting active filters.",
     RESET_FILTERS: "Reset all filters",
     MODAL_TITLE_ADD: "Add New Liability",
     MODAL_TITLE_EDIT: "Edit Liability",
@@ -114,12 +114,14 @@ export const COPY = {
     LIABILITY_TITLE: "Liabilities Breakdown",
     EMPTY_ASSETS_TITLE: "No assets added yet.",
     EMPTY_ASSETS_DESC:
-      "Add your first holdings (e.g. Demat, bank savings) to see the category breakdown.",
+      "Add your first holdings (e.g. Demat, bank savings) to see the type breakdown.",
     EMPTY_LIABILITIES_TITLE: "No liabilities added yet.",
     EMPTY_LIABILITIES_DESC:
-      "Add your first liability (e.g. mortgage, car loan) to see the category breakdown.",
+      "Add your first liability (e.g. mortgage, car loan) to see the type breakdown.",
     ADD_ASSET_BTN: "+ Add Asset",
     ADD_LIABILITY_BTN: "+ Add Liability",
+    SUB_CATEGORIES: "Sub-types",
+    DRILLDOWN_HINT: "Click any segment to inspect sub-types",
   },
 
   FIRE: {

@@ -19,7 +19,12 @@ import {
   Flame,
   ShieldCheck,
 } from "lucide-react";
-import { formatCurrencyAmount, convertToBaseCurrency } from "@/lib/format";
+import {
+  formatCurrencyAmount,
+  convertToBaseCurrency,
+  formatCompactWithSymbol,
+  getCurrencySymbol,
+} from "@/lib/format";
 import { COPY } from "@/constants/copy";
 import { GlassSelect, SelectOption } from "@/components/ui/GlassSelect";
 import { GlassEmptyState } from "@/components/ui/GlassEmptyState";
@@ -33,6 +38,7 @@ interface AssetListProps {
   baseCurrency?: string;
   rates?: Record<string, number>;
   showFilters?: boolean;
+  compactAmounts?: boolean;
 }
 
 export type AssetSortValue =
@@ -52,7 +58,7 @@ const SORT_OPTIONS: SelectOption[] = [
   { value: "name_desc", label: "Name: Z to A" },
   { value: "date_desc", label: "Date: Newest First" },
   { value: "date_asc", label: "Date: Oldest First" },
-  { value: "category_asc", label: "Category: A to Z" },
+  { value: "category_asc", label: "Type: A to Z" },
 ];
 
 const SOURCE_OPTIONS: SelectOption[] = [
@@ -75,6 +81,7 @@ export const AssetList: React.FC<AssetListProps> = ({
   baseCurrency = "INR",
   rates = {},
   showFilters = true,
+  compactAmounts = false,
 }) => {
   // --- Filter and Sort State ---
   const [searchQuery, setSearchQuery] = useState("");
@@ -94,7 +101,7 @@ export const AssetList: React.FC<AssetListProps> = ({
   const categoryOptions: SelectOption[] = useMemo(() => {
     const cats = Array.from(new Set(assets.map((a) => a.category).filter(Boolean))).sort();
     return [
-      { value: "ALL", label: "All Categories" },
+      { value: "ALL", label: "All Types" },
       ...cats.map((c) => ({ value: c, label: c })),
     ];
   }, [assets]);
@@ -109,7 +116,7 @@ export const AssetList: React.FC<AssetListProps> = ({
       )
     ).sort();
     return [
-      { value: "ALL", label: "All Sub-categories" },
+      { value: "ALL", label: "All Sub-types" },
       ...subs.map((s) => ({ value: s, label: s })),
     ];
   }, [assets, selectedCategory]);
@@ -120,7 +127,14 @@ export const AssetList: React.FC<AssetListProps> = ({
     ).sort();
     return [
       { value: "ALL", label: "All Currencies" },
-      ...currs.map((c) => ({ value: c, label: c })),
+      ...currs.map((c) => {
+        const symbol = getCurrencySymbol(c);
+        return {
+          value: c,
+          label: `${c} (${symbol})`,
+          symbol,
+        };
+      }),
     ];
   }, [assets]);
 
@@ -401,7 +415,7 @@ export const AssetList: React.FC<AssetListProps> = ({
             <div>
               <span>{COPY.ASSETS.FILTERED_TOTAL} </span>
               <strong className="text-emerald-400 font-bold">
-                {formatCurrencyAmount(filteredTotal, baseCurrency)} {baseCurrency}
+                {getCurrencySymbol(baseCurrency)}{formatCurrencyAmount(filteredTotal, baseCurrency)}
               </strong>
             </div>
           </div>
@@ -449,7 +463,7 @@ export const AssetList: React.FC<AssetListProps> = ({
                     scope="col"
                     onClick={() => handleHeaderSort("category")}
                     className="px-6 py-4 cursor-pointer hover:text-white transition-colors select-none group"
-                    title="Sort by Category"
+                    title="Sort by Type"
                   >
                     <div className="flex items-center gap-1">
                       <span>{COPY.ASSETS.TABLE_HEADER_CATEGORY}</span>
@@ -528,19 +542,37 @@ export const AssetList: React.FC<AssetListProps> = ({
                       {(() => {
                         const isDiff = asset.currency.toUpperCase() !== baseCurrency.toUpperCase();
                         const converted = convertToBaseCurrency(asset.amount, asset.currency, baseCurrency, rates);
+                        const fullAmount = `${getCurrencySymbol(asset.currency)}${formatCurrencyAmount(asset.amount, asset.currency)}`;
+                        const convertedFull = `${getCurrencySymbol(baseCurrency)}${formatCurrencyAmount(converted, baseCurrency)}`;
+
+                        if (compactAmounts) {
+                          const compactStr = formatCompactWithSymbol(asset.amount, asset.currency);
+                          const convertedCompact = formatCompactWithSymbol(converted, baseCurrency);
+                          return (
+                            <div className="flex flex-col items-end" title={fullAmount}>
+                              <span className="text-base font-black text-white">
+                                {compactStr}
+                              </span>
+                              {isDiff && (
+                                <span
+                                  className="text-xs font-semibold text-slate-400 mt-0.5"
+                                  title={convertedFull}
+                                >
+                                  ≈ {convertedCompact}
+                                </span>
+                              )}
+                            </div>
+                          );
+                        }
+
                         return (
                           <div className="flex flex-col items-end">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-base font-black text-white">
-                                {formatCurrencyAmount(asset.amount, asset.currency)}
-                              </span>
-                              <span className="ios-badge ios-badge-neutral text-xs text-emerald-300">
-                                {asset.currency}
-                              </span>
-                            </div>
+                            <span className="text-base font-black text-white">
+                              {getCurrencySymbol(asset.currency)}{formatCurrencyAmount(asset.amount, asset.currency)}
+                            </span>
                             {isDiff && (
                               <span className="text-xs font-semibold text-slate-400 mt-0.5">
-                                ≈ {formatCurrencyAmount(converted, baseCurrency)} {baseCurrency}
+                                ≈ {getCurrencySymbol(baseCurrency)}{formatCurrencyAmount(converted, baseCurrency)}
                               </span>
                             )}
                           </div>
@@ -625,17 +657,37 @@ export const AssetList: React.FC<AssetListProps> = ({
                     {(() => {
                       const isDiff = asset.currency.toUpperCase() !== baseCurrency.toUpperCase();
                       const converted = convertToBaseCurrency(asset.amount, asset.currency, baseCurrency, rates);
+                      const fullAmount = `${getCurrencySymbol(asset.currency)}${formatCurrencyAmount(asset.amount, asset.currency)}`;
+                      const convertedFull = `${getCurrencySymbol(baseCurrency)}${formatCurrencyAmount(converted, baseCurrency)}`;
+
+                      if (compactAmounts) {
+                        const compactStr = formatCompactWithSymbol(asset.amount, asset.currency);
+                        const convertedCompact = formatCompactWithSymbol(converted, baseCurrency);
+                        return (
+                          <div title={fullAmount}>
+                            <div className="text-lg font-black text-white">
+                              {compactStr}
+                            </div>
+                            {isDiff && (
+                              <div
+                                className="text-[10px] font-semibold text-slate-400 mt-0.5"
+                                title={convertedFull}
+                              >
+                                ≈ {convertedCompact}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      }
+
                       return (
                         <>
                           <div className="text-lg font-black text-white">
-                            {formatCurrencyAmount(asset.amount, asset.currency)}
+                            {getCurrencySymbol(asset.currency)}{formatCurrencyAmount(asset.amount, asset.currency)}
                           </div>
-                          <span className="ios-badge ios-badge-neutral text-[10px] text-emerald-300">
-                            {asset.currency}
-                          </span>
                           {isDiff && (
                             <div className="text-[10px] font-semibold text-slate-400 mt-0.5">
-                              ≈ {formatCurrencyAmount(converted, baseCurrency)} {baseCurrency}
+                              ≈ {getCurrencySymbol(baseCurrency)}{formatCurrencyAmount(converted, baseCurrency)}
                             </div>
                           )}
                         </>

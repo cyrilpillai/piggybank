@@ -59,19 +59,82 @@ export function formatCurrencyAmount(
   }).format(flooredNum);
 }
 
+import { CurrencyItem } from "@/types";
+
+const CURRENCY_STORAGE_KEY = "piggybank_supported_currencies";
+
+// In-memory currency registry populated from backend (/currencies/supported)
+let _currencySymbolMap: Record<string, string> = {};
+let _currencyList: CurrencyItem[] = [];
+
+// Hydrate from localStorage on client startup if available
+if (typeof window !== "undefined") {
+  try {
+    const cached = localStorage.getItem(CURRENCY_STORAGE_KEY);
+    if (cached) {
+      const parsed: CurrencyItem[] = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        _currencyList = parsed;
+        _currencySymbolMap = Object.fromEntries(
+          parsed.map((c) => [c.code.toUpperCase(), c.symbol])
+        );
+      }
+    }
+  } catch {
+    // Ignore storage read errors
+  }
+}
+
+/**
+ * Registers backend-supplied currencies into the centralized frontend registry.
+ * Saves to localStorage for immediate hydration across sessions and slider use cases.
+ */
+export function registerSupportedCurrencies(currencies: CurrencyItem[]): void {
+  if (!currencies || !Array.isArray(currencies)) return;
+  _currencyList = currencies;
+  _currencySymbolMap = Object.fromEntries(
+    currencies.map((c) => [c.code.toUpperCase(), c.symbol])
+  );
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.setItem(CURRENCY_STORAGE_KEY, JSON.stringify(currencies));
+    } catch {
+      // Ignore storage write errors
+    }
+  }
+}
+
+/**
+ * Returns the currently registered currencies loaded from backend.
+ */
+export function getRegisteredCurrencies(): CurrencyItem[] {
+  return _currencyList;
+}
+
+/**
+ * Returns the localized display symbol for a currency code (loaded from BE).
+ * Falls back to the currency code itself if not registered.
+ */
+export function getCurrencySymbol(currencyCode: string): string {
+  const code = (currencyCode || "INR").toUpperCase();
+  return _currencySymbolMap[code] || code;
+}
+
 /**
  * Readable compact currency formatting for overview hero cards and metric summaries.
  * Always rounds down (floors) instead of rounding up.
  * E.g. when base is INR:
- *   38,568,871.90 -> "3.85 Cr" (not 3.86 Cr)
- *   14,553,195.50 -> "1.45 Cr"
- *   5,000,000 -> "50 L"
- *   865,000 -> "8.65 L"
- *   45,000 -> "45 K"
+ *   38,568,871.90 -> "3.85Cr" (not 3.86Cr)
+ *   14,553,195.50 -> "1.45Cr"
+ *   5,000,000 -> "50L"
+ *   865,000 -> "8.65L"
+ *   45,000 -> "45K"
+ *   5,000 -> "5K"
  * E.g. when base is USD:
- *   14,553,195.50 -> "14.55 M"
- *   2,500,000 -> "2.5 M"
- *   45,000 -> "45 K"
+ *   14,553,195.50 -> "14.55M"
+ *   2,500,000 -> "2.5M"
+ *   45,000 -> "45K"
+ *   5,000 -> "5K"
  */
 export function formatCompactCurrency(
   amount: number | string,
@@ -93,37 +156,59 @@ export function formatCompactCurrency(
     if (abs >= 1e7) {
       const cr = abs / 1e7;
       const formatted = cr >= 100 ? floorToDecimals(cr, 1) : floorToDecimals(cr, 2);
-      return { compact: `${sign}${parseFloat(formatted)} Cr`, full };
+      return { compact: `${sign}${parseFloat(formatted)}Cr`, full };
     }
     // 1 Lakh = 100,000 (10^5)
     if (abs >= 1e5) {
       const l = abs / 1e5;
       const formatted = l >= 100 ? floorToDecimals(l, 1) : floorToDecimals(l, 2);
-      return { compact: `${sign}${parseFloat(formatted)} L`, full };
+      return { compact: `${sign}${parseFloat(formatted)}L`, full };
     }
-    // Thousands
-    if (abs >= 1e4) {
+    // Thousands (1,000 to 99,999)
+    if (abs >= 1e3) {
       const k = abs / 1e3;
-      return { compact: `${sign}${parseFloat(floorToDecimals(k, 1))} K`, full };
+      const formatted = k >= 100 ? floorToDecimals(k, 1) : floorToDecimals(k, 2);
+      return { compact: `${sign}${parseFloat(formatted)}K`, full };
     }
-    return { compact: full, full };
+    // Under 1,000
+    const underK = floorToDecimals(abs, 2);
+    const cleanUnderK = underK.endsWith(".00") ? underK.slice(0, -3) : underK;
+    return { compact: `${sign}${cleanUnderK}`, full };
   }
 
   // Western currencies (USD, EUR, GBP, CAD, etc.)
   if (abs >= 1e9) {
     const b = abs / 1e9;
-    return { compact: `${sign}${parseFloat(floorToDecimals(b, 2))} B`, full };
+    const formatted = b >= 100 ? floorToDecimals(b, 1) : floorToDecimals(b, 2);
+    return { compact: `${sign}${parseFloat(formatted)}B`, full };
   }
   if (abs >= 1e6) {
     const m = abs / 1e6;
-    return { compact: `${sign}${parseFloat(floorToDecimals(m, 2))} M`, full };
+    const formatted = m >= 100 ? floorToDecimals(m, 1) : floorToDecimals(m, 2);
+    return { compact: `${sign}${parseFloat(formatted)}M`, full };
   }
-  if (abs >= 1e4) {
+  if (abs >= 1e3) {
     const k = abs / 1e3;
-    return { compact: `${sign}${parseFloat(floorToDecimals(k, 1))} K`, full };
+    const formatted = k >= 100 ? floorToDecimals(k, 1) : floorToDecimals(k, 2);
+    return { compact: `${sign}${parseFloat(formatted)}K`, full };
   }
 
-  return { compact: full, full };
+  const underK = floorToDecimals(abs, 2);
+  const cleanUnderK = underK.endsWith(".00") ? underK.slice(0, -3) : underK;
+  return { compact: `${sign}${cleanUnderK}`, full };
+}
+
+/**
+ * Prettifies an amount with currency symbol and compact units (e.g. ₹20L, ₹5K, $1.44M).
+ */
+export function formatCompactWithSymbol(
+  amount: number | string,
+  currencyCode = "INR"
+): string {
+  const code = (currencyCode || "INR").toUpperCase();
+  const symbol = getCurrencySymbol(code);
+  const compact = formatCompactCurrency(amount, code).compact;
+  return `${symbol}${compact}`;
 }
 
 /**
@@ -275,4 +360,85 @@ export function formatAge(age: number | null | undefined): string {
   if (age === null || age === undefined || isNaN(age)) return "";
   return `${age} yrs`;
 }
+
+/**
+ * Interface representing any generic split item (for donut charts, progress bars, legends).
+ */
+export interface GenericSplitItem {
+  label: string;
+  value: number | string;
+  percentage?: number;
+  count?: number;
+  color?: string;
+  dotColor?: string;
+  textColor?: string;
+  formattedValue?: string;
+  [key: string]: any;
+}
+
+/**
+ * Options for clamping split collections to top N items.
+ */
+export interface ClampSplitsOptions {
+  othersLabel?: string;
+  othersColor?: string;
+  othersDotColor?: string;
+  othersTextColor?: string;
+  formatValue?: (val: number) => string;
+}
+
+/**
+ * Clamps a list of split items (for donut charts, segmented progress bars, etc.)
+ * to a maximum number of splits (default 10: top 9 + 1 consolidated "Others" section).
+ * Everything beyond the top (maxSplits - 1) items is clubbed into "Others".
+ */
+export function clampToTopSplits<T extends GenericSplitItem>(
+  items: T[],
+  maxSplits = 10,
+  options?: ClampSplitsOptions
+): T[] {
+  if (!items || items.length <= maxSplits) return items || [];
+
+  const othersLabel = options?.othersLabel || "Others";
+  const othersColor = options?.othersColor || "#64748b";
+  const othersDotColor = options?.othersDotColor || "bg-slate-500";
+  const othersTextColor = options?.othersTextColor || "text-slate-400";
+
+  // Sort descending by value
+  const sorted = [...items].sort((a, b) => (Number(b.value) || 0) - (Number(a.value) || 0));
+  const top = sorted.slice(0, maxSplits - 1);
+  const remaining = sorted.slice(maxSplits - 1);
+
+  const othersValue = remaining.reduce(
+    (sum, item) => sum + Math.max(0, Number(item.value) || 0),
+    0
+  );
+  const othersPercentage = remaining.reduce(
+    (sum, item) => sum + Math.max(0, Number(item.percentage) || 0),
+    0
+  );
+  const othersCount = remaining.reduce(
+    (sum, item) => sum + (item.count !== undefined ? Number(item.count) || 1 : 1),
+    0
+  );
+
+  const othersFormattedValue = options?.formatValue
+    ? options.formatValue(othersValue)
+    : undefined;
+
+  const othersItem = {
+    ...remaining[0],
+    label: othersLabel,
+    value: othersValue,
+    percentage: othersPercentage,
+    count: othersCount,
+    color: othersColor,
+    dotColor: othersDotColor,
+    textColor: othersTextColor,
+    ...(othersFormattedValue ? { formattedValue: othersFormattedValue } : {}),
+  } as T;
+
+  return [...top, othersItem];
+}
+
 

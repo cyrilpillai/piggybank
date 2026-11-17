@@ -5,6 +5,7 @@ import { User, CurrencyItem } from "@/types";
 import { LogOut } from "lucide-react";
 import { PiggyLogo } from "@/components/ui/PiggyLogo";
 import { GlassSelect } from "@/components/ui/GlassSelect";
+import { getCurrencySymbol } from "@/lib/format";
 
 interface NavbarProps {
   user: User | null;
@@ -29,12 +30,15 @@ export const Navbar: React.FC<NavbarProps> = ({
   onCurrencyChange,
   onLogout,
 }) => {
-  const currencyOptions = currencies.map((c) => ({
-    value: c.code,
-    label: `${c.code} (${c.symbol})`,
-    sublabel: c.name,
-    symbol: c.symbol,
-  }));
+  const currencyOptions = currencies.map((c) => {
+    const symbol = getCurrencySymbol(c.code);
+    return {
+      value: c.code,
+      label: `${c.code} (${symbol})`,
+      sublabel: c.name,
+      symbol,
+    };
+  });
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-white/[0.08] bg-slate-950/65 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,0,0,0.35)]">

@@ -6,6 +6,7 @@ import { TrendingDown, Percent } from "lucide-react";
 import { GlassSelect } from "@/components/ui/GlassSelect";
 import { GlassModal } from "@/components/ui/GlassModal";
 import { COPY } from "@/constants/copy";
+import { getCurrencySymbol } from "@/lib/format";
 
 interface LiabilityModalProps {
   isOpen: boolean;
@@ -105,12 +106,15 @@ export const LiabilityModal: React.FC<LiabilityModalProps> = ({
     }
   };
 
-  const currencyOptions = currencies.map((c) => ({
-    value: c.code,
-    label: `${c.code} (${c.symbol})`,
-    sublabel: c.name,
-    symbol: c.symbol,
-  }));
+  const currencyOptions = currencies.map((c) => {
+    const symbol = getCurrencySymbol(c.code);
+    return {
+      value: c.code,
+      label: `${c.code} (${symbol})`,
+      sublabel: c.name,
+      symbol,
+    };
+  });
 
   return (
     <GlassModal
@@ -195,11 +199,11 @@ export const LiabilityModal: React.FC<LiabilityModalProps> = ({
             </div>
           </div>
 
-          {/* Category & Interest Rate */}
+          {/* Type & Interest Rate */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Category *
+                Liability Type *
               </label>
               <GlassSelect
                 value={category}

@@ -2,7 +2,12 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { api } from "@/lib/api";
-import { convertToBaseCurrency } from "@/lib/format";
+import {
+  convertToBaseCurrency,
+  getCurrencySymbol,
+  registerSupportedCurrencies,
+  getRegisteredCurrencies,
+} from "@/lib/format";
 import {
   trackCurrencyChange,
   trackAddAsset,
@@ -39,19 +44,6 @@ import {
   X,
 } from "lucide-react";
 
-const DEFAULT_CURRENCIES: CurrencyItem[] = [
-  { code: "INR", name: "Indian Rupee", symbol: "₹" },
-  { code: "USD", name: "US Dollar", symbol: "$" },
-  { code: "EUR", name: "Euro", symbol: "€" },
-  { code: "GBP", name: "British Pound", symbol: "£" },
-  { code: "SGD", name: "Singapore Dollar", symbol: "S$" },
-  { code: "AED", name: "UAE Dirham", symbol: "د.إ" },
-  { code: "CAD", name: "Canadian Dollar", symbol: "C$" },
-  { code: "AUD", name: "Australian Dollar", symbol: "A$" },
-  { code: "JPY", name: "Japanese Yen", symbol: "¥" },
-  { code: "CHF", name: "Swiss Franc", symbol: "CHF" },
-];
-
 export default function HomePage() {
   // --- Auth & User State ---
   const [user, setUser] = useState<User | null>(null);
@@ -61,7 +53,7 @@ export default function HomePage() {
   // --- Active View & Currencies ---
   const [activeTab, setActiveTab] = useState<TabType>("dashboard");
   const [baseCurrency, setBaseCurrency] = useState<string>("INR");
-  const [currencies, setCurrencies] = useState<CurrencyItem[]>(DEFAULT_CURRENCIES);
+  const [currencies, setCurrencies] = useState<CurrencyItem[]>(() => getRegisteredCurrencies());
   const [rates, setRates] = useState<Record<string, number>>({});
 
   const handleTabChange = (tab: TabType) => {
@@ -96,30 +88,41 @@ export default function HomePage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  // Currency symbol lookup
-  const currentSymbol =
-    currencies.find((c) => c.code === baseCurrency)?.symbol || "$";
+  // Currency symbol lookup (centralized)
+  const currentSymbol = getCurrencySymbol(baseCurrency);
 
-  // Top 5 holdings ranked by normalized amount in base currency
-  const topHoldings = useMemo(() => {
+  // Top 3 assets ranked by normalized amount in base currency
+  const topAssets = useMemo(() => {
     return [...assets]
       .sort((a, b) => {
         const valA = convertToBaseCurrency(a.amount, a.currency, baseCurrency, rates);
         const valB = convertToBaseCurrency(b.amount, b.currency, baseCurrency, rates);
         return valB - valA;
       })
-      .slice(0, 5);
+      .slice(0, 3);
   }, [assets, baseCurrency, rates]);
+
+  // Top 3 liabilities ranked by normalized amount in base currency
+  const topLiabilities = useMemo(() => {
+    return [...liabilities]
+      .sort((a, b) => {
+        const valA = convertToBaseCurrency(a.amount, a.currency, baseCurrency, rates);
+        const valB = convertToBaseCurrency(b.amount, b.currency, baseCurrency, rates);
+        return valB - valA;
+      })
+      .slice(0, 3);
+  }, [liabilities, baseCurrency, rates]);
 
   // --- Load Supported Currencies ---
   const loadCurrencies = async () => {
     try {
       const list = await api.getSupportedCurrencies();
       if (list && list.length > 0) {
+        registerSupportedCurrencies(list);
         setCurrencies(list);
       }
     } catch {
-      // Keep DEFAULT_CURRENCIES on error
+      // Keep cached currencies on error
     }
   };
 
@@ -239,6 +242,7 @@ export default function HomePage() {
   const handleLoginSuccess = (loggedInUser: User) => {
     setUser(loggedInUser);
     setIsAuthenticated(true);
+    loadCurrencies();
     const curr = loggedInUser.base_currency || "INR";
     setBaseCurrency(curr);
     loadAppData(curr);
@@ -426,6 +430,8 @@ export default function HomePage() {
                   categories={dashboard?.asset_categories || []}
                   currencySymbol={currentSymbol}
                   baseCurrency={baseCurrency}
+                  items={assets}
+                  rates={rates}
                   onAddItem={() => {
                     setEditingAsset(null);
                     setIsAssetModalOpen(true);
@@ -438,6 +444,8 @@ export default function HomePage() {
                   categories={dashboard?.liability_categories || []}
                   currencySymbol={currentSymbol}
                   baseCurrency={baseCurrency}
+                  items={liabilities}
+                  rates={rates}
                   onAddItem={() => {
                     setEditingLiability(null);
                     setIsLiabilityModalOpen(true);
@@ -445,14 +453,14 @@ export default function HomePage() {
                 />
               </div>
 
-              {/* Recent Holdings Quick View */}
+              {/* Top Assets Quick View */}
               <div className="rounded-[32px] ios-glass-card p-6 space-y-4 shadow-ios-card">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
                     <div className="h-9 w-9 rounded-xl ios-icon-box ios-icon-box-emerald">
                       <TrendingUp className="h-4 w-4" />
                     </div>
-                    <h3 className="text-base font-bold text-white tracking-tight">Top Holdings</h3>
+                    <h3 className="text-base font-bold text-white tracking-tight">Top Assets</h3>
                   </div>
                   <button
                     onClick={() => setActiveTab("assets")}
@@ -463,10 +471,11 @@ export default function HomePage() {
                 </div>
 
                 <AssetList
-                  assets={topHoldings}
+                  assets={topAssets}
                   baseCurrency={baseCurrency}
                   rates={rates}
                   showFilters={false}
+                  compactAmounts={true}
                   onEdit={(asset) => {
                     setEditingAsset(asset);
                     setIsAssetModalOpen(true);
@@ -475,6 +484,41 @@ export default function HomePage() {
                   onAddNew={() => {
                     setEditingAsset(null);
                     setIsAssetModalOpen(true);
+                  }}
+                />
+              </div>
+
+              {/* Top Liabilities Quick View */}
+              <div className="rounded-[32px] ios-glass-card p-6 space-y-4 shadow-ios-card">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="h-9 w-9 rounded-xl ios-icon-box ios-icon-box-rose">
+                      <TrendingDown className="h-4 w-4" />
+                    </div>
+                    <h3 className="text-base font-bold text-white tracking-tight">Top Liabilities</h3>
+                  </div>
+                  <button
+                    onClick={() => setActiveTab("liabilities")}
+                    className="text-xs text-slate-300 hover:text-white font-semibold transition ios-glass-pill px-3.5 py-1.5 rounded-full"
+                  >
+                    View All ({liabilities.length}) →
+                  </button>
+                </div>
+
+                <LiabilityList
+                  liabilities={topLiabilities}
+                  baseCurrency={baseCurrency}
+                  rates={rates}
+                  showFilters={false}
+                  compactAmounts={true}
+                  onEdit={(liability) => {
+                    setEditingLiability(liability);
+                    setIsLiabilityModalOpen(true);
+                  }}
+                  onDelete={handleDeleteLiability}
+                  onAddNew={() => {
+                    setEditingLiability(null);
+                    setIsLiabilityModalOpen(true);
                   }}
                 />
               </div>

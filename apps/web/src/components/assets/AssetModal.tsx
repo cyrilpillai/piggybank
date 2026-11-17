@@ -6,6 +6,7 @@ import { TrendingUp, Flame, ShieldCheck } from "lucide-react";
 import { GlassSelect } from "@/components/ui/GlassSelect";
 import { GlassModal } from "@/components/ui/GlassModal";
 import { COPY } from "@/constants/copy";
+import { getCurrencySymbol } from "@/lib/format";
 
 interface AssetModalProps {
   isOpen: boolean;
@@ -108,12 +109,15 @@ export const AssetModal: React.FC<AssetModalProps> = ({
     }
   };
 
-  const currencyOptions = currencies.map((c) => ({
-    value: c.code,
-    label: `${c.code} (${c.symbol})`,
-    sublabel: c.name,
-    symbol: c.symbol,
-  }));
+  const currencyOptions = currencies.map((c) => {
+    const symbol = getCurrencySymbol(c.code);
+    return {
+      value: c.code,
+      label: `${c.code} (${symbol})`,
+      sublabel: c.name,
+      symbol,
+    };
+  });
 
   return (
     <GlassModal
@@ -178,11 +182,11 @@ export const AssetModal: React.FC<AssetModalProps> = ({
           </div>
         </div>
 
-        {/* Row 2: Category & Sub Category */}
+        {/* Row 2: Type & Sub-type */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1">
-              Category *
+              Asset Type *
             </label>
             <GlassSelect
               value={category}
@@ -193,7 +197,7 @@ export const AssetModal: React.FC<AssetModalProps> = ({
 
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1">
-              Sub Category *
+              Asset Sub-type *
             </label>
             <GlassSelect
               value={subCategory}

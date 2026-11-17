@@ -4,6 +4,7 @@ import React from "react";
 import { FireCalculationMetrics } from "@/types";
 import { formatCompactCurrency, formatPercent } from "@/lib/format";
 import { COPY } from "@/constants/copy";
+import { GlassProgressBar } from "@/components/ui/GlassProgressBar";
 import { Flame, ShieldCheck, CheckCircle2 } from "lucide-react";
 
 interface FireProgressCardsProps {
@@ -67,12 +68,12 @@ export const FireProgressCards: React.FC<FireProgressCardsProps> = ({
         </div>
 
         {/* Liquid Gradient Progress Track */}
-        <div className="relative h-2.5 w-full rounded-full bg-black/40 p-0.5 overflow-hidden border border-white/10 shadow-inner">
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-pink-500 via-rose-400 to-amber-400 shadow-[0_0_12px_rgba(244,114,182,0.5)] transition-all duration-700 ease-out"
-            style={{ width: `${Math.max(2, fiPercent)}%` }}
-          />
-        </div>
+        <GlassProgressBar
+          value={fiPercent}
+          color="fire"
+          size="md"
+          ariaLabel={COPY.FIRE.FULL_FI_CORPUS}
+        />
 
         {/* Value and Context Footer */}
         <div className="flex items-center justify-between text-xs pt-0.5">
@@ -118,12 +119,12 @@ export const FireProgressCards: React.FC<FireProgressCardsProps> = ({
         </div>
 
         {/* Liquid Gradient Progress Track */}
-        <div className="relative h-2.5 w-full rounded-full bg-black/40 p-0.5 overflow-hidden border border-white/10 shadow-inner">
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-purple-500 via-indigo-400 to-cyan-400 shadow-[0_0_12px_rgba(168,85,247,0.5)] transition-all duration-700 ease-out"
-            style={{ width: `${Math.max(2, coastPercent)}%` }}
-          />
-        </div>
+        <GlassProgressBar
+          value={coastPercent}
+          color="coast"
+          size="md"
+          ariaLabel={COPY.FIRE.COAST_FI_PROGRESS}
+        />
 
         {/* Value and Context Footer */}
         <div className="flex items-center justify-between text-xs pt-0.5">

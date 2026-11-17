@@ -477,8 +477,6 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
           <span>Piggybank • Personal Wealth OS</span>
         </div>
         <div className="flex items-center gap-4 text-[11px] text-slate-400">
-          <span>Official ECB FX Reference Rates</span>
-          <span>•</span>
           <span>Multi-Currency Normalization</span>
           <span>•</span>
           <span>Liability-to-Asset Ratios</span>

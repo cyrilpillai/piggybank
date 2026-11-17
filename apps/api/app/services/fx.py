@@ -98,7 +98,8 @@ class FXService:
         return Decimal(str(converted)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
     def get_supported_currencies(self) -> List[Dict[str, str]]:
-        return SUPPORTED_CURRENCIES
+        supported, _ = _load_currency_data()
+        return supported
 
 
 fx_service = FXService()
