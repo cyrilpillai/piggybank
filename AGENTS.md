@@ -7,3 +7,6 @@
 
 ## Git Commit Guidelines
 - **Conventional Scoped Commits:** Follow conventional scoped commit messages based on the affected package, e.g. `feat(web): ...`, `feat(api): ...`, `fix(web): ...`, `fix(api): ...`, `chore(web): ...`, `chore(api): ...`, etc.
+
+## Copy & Text Centralization (`apps/web`)
+- **Zero Hardcoded Text Policy:** Never write raw, hardcoded user-facing strings directly in `.tsx` components. All UI strings, labels, buttons, titles, descriptions, and empty state messages MUST be added to `apps/web/src/constants/copy.ts` and consumed via the `COPY` object.

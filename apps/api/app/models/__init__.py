@@ -4,6 +4,7 @@ from app.models.liability import Liability
 from app.models.asset_category import AssetCategory, AssetSubCategory
 from app.models.liability_category import LiabilityCategory
 from app.models.fire_scenario import FireScenario
+from app.models.net_worth_snapshot import NetWorthSnapshot
 
 __all__ = [
     "User",
@@ -13,4 +14,5 @@ __all__ = [
     "AssetSubCategory",
     "LiabilityCategory",
     "FireScenario",
+    "NetWorthSnapshot",
 ]

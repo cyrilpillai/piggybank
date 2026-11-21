@@ -136,33 +136,7 @@ class FireService:
         gap_vs_current = (monthly_contribution - monthly_contribution_needed).quantize(Decimal("0.01"))
         is_full_fi_now = P0 >= target_real
 
-        # 7. Full FI Age & Year Simulation
-        full_fi_age: Optional[float] = None
-        full_fi_year: Optional[int] = None
-        full_fi_variance: Optional[float] = None
-
-        if is_full_fi_now:
-            full_fi_age = current_age
-            full_fi_year = today.year
-            full_fi_variance = round(retirement_age_goal - current_age, 2)
-        else:
-            sim_p = P0
-            max_sim_months = 1200  # Up to 100 years
-            hit_month = None
-            for m in range(1, max_sim_months + 1):
-                y_idx = (m - 1) // 12
-                c_step = C * ((1.0 + gc) ** y_idx)
-                sim_p = sim_p * (1.0 + rm) + c_step
-                if sim_p >= target_real:
-                    hit_month = m
-                    break
-
-            if hit_month is not None:
-                full_fi_age = round(current_age + hit_month / 12.0, 1)
-                full_fi_year = today.year + (today.month + hit_month - 1) // 12
-                full_fi_variance = round(retirement_age_goal - full_fi_age, 1)
-
-        # 8. Coast FI Metrics
+        # 7. Coast FI Baseline Metrics
         discount_factor = (1.0 + rm) ** months_to_goal
         if discount_factor > 1e-9:
             coast_fi_target_val = target_real / discount_factor
@@ -173,22 +147,69 @@ class FireService:
         coast_fi_gap = (current_liquid_portfolio - coast_fi_target).quantize(Decimal("0.01"))
         is_coast_fi = P0 >= float(coast_fi_target)
 
+        # 8. Full FI & Coast FI Timeline Simulation
+        full_fi_age: Optional[float] = None
+        full_fi_year: Optional[int] = None
+        full_fi_month: Optional[int] = None
+        full_fi_variance: Optional[float] = None
+
         coast_fi_age: Optional[float] = None
+        coast_fi_year: Optional[int] = None
+        coast_fi_month: Optional[int] = None
         coast_fi_variance: Optional[float] = None
 
+        hit_month_full = None
+        hit_month_coast = None
+
         if is_full_fi_now:
+            full_fi_age = current_age
+            full_fi_year = today.year
+            full_fi_month = today.month
+            full_fi_variance = round(retirement_age_goal - current_age, 2)
+            hit_month_full = 0
+
+        if is_coast_fi:
             coast_fi_age = current_age
+            coast_fi_year = today.year
+            coast_fi_month = today.month
             coast_fi_variance = round(retirement_age_goal - current_age, 2)
-        elif P0 > 0.0 and rm > 0.0 and target_real > P0:
-            try:
-                m_coast = math.log(target_real / P0) / math.log(1.0 + rm)
-                coast_fi_age = round(current_age + m_coast / 12.0, 1)
-                coast_fi_variance = round(retirement_age_goal - coast_fi_age, 1)
-            except (ValueError, ZeroDivisionError):
-                pass
-        elif is_coast_fi and rm > 0.0:
-            coast_fi_age = retirement_age_goal
-            coast_fi_variance = 0.0
+            hit_month_coast = 0
+
+        if hit_month_full is None or hit_month_coast is None:
+            sim_p = P0
+            max_sim_months = 1200  # Up to 100 years
+            for m in range(1, max_sim_months + 1):
+                y_idx = (m - 1) // 12
+                c_step = C * ((1.0 + gc) ** y_idx)
+                sim_p = sim_p * (1.0 + rm) + c_step
+
+                # Check Coast FI threshold at month m
+                if hit_month_coast is None:
+                    m_remain = max(0.0, months_to_goal - m)
+                    if m_remain > 0 and (1.0 + rm) > 0:
+                        disc = (1.0 + rm) ** m_remain
+                        coast_thresh = target_real / disc if disc > 1e-9 else target_real
+                    else:
+                        coast_thresh = target_real
+
+                    if sim_p >= coast_thresh:
+                        hit_month_coast = m
+                        coast_fi_age = round(current_age + m / 12.0, 1)
+                        coast_fi_year = today.year + (today.month + m - 1) // 12
+                        coast_fi_month = (today.month + m - 1) % 12 + 1
+                        coast_fi_variance = round(retirement_age_goal - coast_fi_age, 1)
+
+                # Check Full FI threshold at month m
+                if hit_month_full is None:
+                    if sim_p >= target_real:
+                        hit_month_full = m
+                        full_fi_age = round(current_age + m / 12.0, 1)
+                        full_fi_year = today.year + (today.month + m - 1) // 12
+                        full_fi_month = (today.month + m - 1) % 12 + 1
+                        full_fi_variance = round(retirement_age_goal - full_fi_age, 1)
+
+                if hit_month_full is not None and hit_month_coast is not None:
+                    break
 
         # 9. Trajectory Points (Yearly for charting from current age to age 85)
         trajectory: List[TrajectoryPoint] = []
@@ -237,6 +258,7 @@ class FireService:
             years_to_goal_age=round(years_to_goal, 2),
             full_fi_age=full_fi_age,
             full_fi_year=full_fi_year,
+            full_fi_month=full_fi_month,
             full_fi_timeline_variance=full_fi_variance,
             projected_portfolio_at_retirement=projected_portfolio_retire,
             monthly_contribution_needed=monthly_contribution_needed,
@@ -245,6 +267,8 @@ class FireService:
             coast_fi_target=coast_fi_target,
             coast_fi_gap=coast_fi_gap,
             coast_fi_age=coast_fi_age,
+            coast_fi_year=coast_fi_year,
+            coast_fi_month=coast_fi_month,
             coast_fi_timeline_variance=coast_fi_variance,
             is_coast_fi_achieved=is_coast_fi,
             current_liquid_portfolio=current_liquid_portfolio,

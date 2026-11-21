@@ -31,3 +31,4 @@ class User(Base):
     assets = relationship("Asset", back_populates="user", cascade="all, delete-orphan", lazy="selectin")
     liabilities = relationship("Liability", back_populates="user", cascade="all, delete-orphan", lazy="selectin")
     fire_scenarios = relationship("FireScenario", back_populates="user", cascade="all, delete-orphan", lazy="selectin")
+    net_worth_snapshots = relationship("NetWorthSnapshot", back_populates="user", cascade="all, delete-orphan", lazy="selectin")

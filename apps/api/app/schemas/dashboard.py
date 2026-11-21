@@ -32,3 +32,20 @@ class DashboardResponse(BaseModel):
     summary: NetWorthSummary
     asset_categories: List[CategoryBreakdown]
     liability_categories: List[CategoryBreakdown]
+
+
+class NetWorthHistoryPoint(BaseModel):
+    date: str
+    net_worth: Decimal
+    total_assets: Decimal
+    total_liabilities: Decimal
+
+
+class NetWorthHistoryResponse(BaseModel):
+    currency: str
+    range: str
+    start_date: str
+    end_date: str
+    net_change: Decimal
+    percentage_change: float
+    points: List[NetWorthHistoryPoint]

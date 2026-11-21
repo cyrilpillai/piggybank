@@ -269,6 +269,15 @@ async def test_fire_mathematical_precision_and_edge_cases():
         assert m["is_coast_fi_achieved"] is False
         assert float(m["coast_fi_gap"]) < 0  # Deficit
 
+        # Verify month and year projections for both Full FI and Coast FIRE
+        assert m["full_fi_year"] is not None
+        assert 1 <= m["full_fi_month"] <= 12
+        assert m["coast_fi_year"] is not None
+        assert 1 <= m["coast_fi_month"] <= 12
+        assert m["coast_fi_age"] is not None
+        assert m["coast_fi_age"] <= m["full_fi_age"]
+        assert m["coast_fi_year"] <= m["full_fi_year"]
+
         # 2. Test already achieved Full FI
         # Liquid portfolio = 20,000,000 (exceeds 18,750,000)
         achieved_resp = await ac.post("/api/v1/fire/calculate", headers=headers, json={
@@ -290,6 +299,11 @@ async def test_fire_mathematical_precision_and_edge_cases():
         assert float(am["monthly_contribution_needed"]) == 0.0
         assert float(am["gap_vs_current"]) == 10000.0  # Entire contribution is surplus
         assert am["full_fi_age"] == 30.0
+        assert am["full_fi_year"] == date.today().year
+        assert am["full_fi_month"] == date.today().month
+        assert am["coast_fi_age"] == 30.0
+        assert am["coast_fi_year"] == date.today().year
+        assert am["coast_fi_month"] == date.today().month
         assert am["full_fi_timeline_variance"] == 20.0  # 20 years ahead of age 50 goal
 
 

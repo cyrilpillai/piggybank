@@ -16,6 +16,12 @@ class AssetCategory(Base):
     name = Column(String(64), unique=True, nullable=False, index=True)
     display_order = Column(Integer, default=0, nullable=False)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        nullable=False
+    )
 
     # Relationships
     sub_categories = relationship(
@@ -36,6 +42,12 @@ class AssetSubCategory(Base):
     is_liquid = Column(Boolean, default=True, nullable=False, index=True)
     display_order = Column(Integer, default=0, nullable=False)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        nullable=False
+    )
 
     __table_args__ = (
         UniqueConstraint("asset_category_id", "name", name="uq_asset_category_sub_category"),

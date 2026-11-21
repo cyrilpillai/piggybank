@@ -17,6 +17,12 @@ class LiabilityCategory(Base):
     description = Column(String(255), nullable=True)
     display_order = Column(Integer, default=0, nullable=False)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+    updated_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        nullable=False
+    )
 
     # Relationships
     liabilities = relationship("Liability", back_populates="liability_category_rel")

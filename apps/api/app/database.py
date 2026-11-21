@@ -52,6 +52,7 @@ async def init_db() -> None:
     import app.models.asset_category
     import app.models.liability_category
     import app.models.fire_scenario
+    import app.models.net_worth_snapshot
 
     asset_seed_path = Path(__file__).parent / "data" / "asset_categories.json"
     liability_seed_path = Path(__file__).parent / "data" / "liability_categories.json"
@@ -71,20 +72,21 @@ async def init_db() -> None:
             for cat_dict in asset_categories_data:
                 cat_id = str(uuid.uuid4())
                 sync_conn.execute(
-                    text("INSERT INTO asset_categories (id, name, display_order, created_at) VALUES (:id, :name, :display_order, :created_at)"),
-                    {"id": cat_id, "name": cat_dict["name"], "display_order": cat_dict["display_order"], "created_at": now_utc}
+                    text("INSERT INTO asset_categories (id, name, display_order, created_at, updated_at) VALUES (:id, :name, :display_order, :created_at, :updated_at)"),
+                    {"id": cat_id, "name": cat_dict["name"], "display_order": cat_dict["display_order"], "created_at": now_utc, "updated_at": now_utc}
                 )
                 for sub_dict in cat_dict["sub_categories"]:
                     sub_id = str(uuid.uuid4())
                     sync_conn.execute(
-                        text("INSERT INTO asset_sub_categories (id, asset_category_id, name, is_liquid, display_order, created_at) VALUES (:id, :asset_category_id, :name, :is_liquid, :display_order, :created_at)"),
+                        text("INSERT INTO asset_sub_categories (id, asset_category_id, name, is_liquid, display_order, created_at, updated_at) VALUES (:id, :asset_category_id, :name, :is_liquid, :display_order, :created_at, :updated_at)"),
                         {
                             "id": sub_id,
                             "asset_category_id": cat_id,
                             "name": sub_dict["name"],
                             "is_liquid": sub_dict["is_liquid"],
                             "display_order": sub_dict["display_order"],
-                            "created_at": now_utc
+                            "created_at": now_utc,
+                            "updated_at": now_utc
                         }
                     )
 
@@ -97,13 +99,14 @@ async def init_db() -> None:
             for l_dict in liability_categories_data:
                 l_id = str(uuid.uuid4())
                 sync_conn.execute(
-                    text("INSERT INTO liability_categories (id, name, description, display_order, created_at) VALUES (:id, :name, :description, :display_order, :created_at)"),
+                    text("INSERT INTO liability_categories (id, name, description, display_order, created_at, updated_at) VALUES (:id, :name, :description, :display_order, :created_at, :updated_at)"),
                     {
                         "id": l_id,
                         "name": l_dict["name"],
                         "description": l_dict.get("description"),
                         "display_order": l_dict.get("display_order", 0),
-                        "created_at": now_utc
+                        "created_at": now_utc,
+                        "updated_at": now_utc
                     }
                 )
 

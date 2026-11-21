@@ -9,6 +9,7 @@ from app.models.asset import Asset
 from app.models.asset_category import AssetSubCategory, AssetCategory
 from app.schemas.asset import AssetCreate, AssetUpdate, AssetResponse, ASSET_SUB_CATEGORIES
 from app.services.auth import get_current_user
+from app.services.dashboard import upsert_today_snapshot
 
 router = APIRouter(prefix="/assets", tags=["Assets"])
 
@@ -85,6 +86,7 @@ async def create_asset(
     db.add(asset)
     await db.commit()
     await db.refresh(asset)
+    await upsert_today_snapshot(user=current_user, db=db)
     return AssetResponse.model_validate(asset)
 
 
@@ -151,6 +153,7 @@ async def update_asset(
 
     await db.commit()
     await db.refresh(asset)
+    await upsert_today_snapshot(user=current_user, db=db)
     return AssetResponse.model_validate(asset)
 
 
@@ -169,4 +172,5 @@ async def delete_asset(
 
     await db.delete(asset)
     await db.commit()
+    await upsert_today_snapshot(user=current_user, db=db)
     return None

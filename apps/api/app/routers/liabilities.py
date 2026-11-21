@@ -10,6 +10,7 @@ from app.models.liability_category import LiabilityCategory
 from app.schemas.liability import LiabilityCreate, LiabilityUpdate, LiabilityResponse
 from app.schemas.liability_category import LiabilityCategoryResponse
 from app.services.auth import get_current_user
+from app.services.dashboard import upsert_today_snapshot
 
 router = APIRouter(prefix="/liabilities", tags=["Liabilities"])
 
@@ -74,6 +75,7 @@ async def create_liability(
     db.add(liability)
     await db.commit()
     await db.refresh(liability)
+    await upsert_today_snapshot(user=current_user, db=db)
     return LiabilityResponse.model_validate(liability)
 
 
@@ -123,6 +125,7 @@ async def update_liability(
 
     await db.commit()
     await db.refresh(liability)
+    await upsert_today_snapshot(user=current_user, db=db)
     return LiabilityResponse.model_validate(liability)
 
 
@@ -141,4 +144,5 @@ async def delete_liability(
 
     await db.delete(liability)
     await db.commit()
+    await upsert_today_snapshot(user=current_user, db=db)
     return None

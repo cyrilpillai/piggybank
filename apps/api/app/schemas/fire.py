@@ -80,6 +80,7 @@ class FireCalculationMetrics(BaseModel):
     years_to_goal_age: float
     full_fi_age: Optional[float] = None
     full_fi_year: Optional[int] = None
+    full_fi_month: Optional[int] = None
     full_fi_timeline_variance: Optional[float] = None
     projected_portfolio_at_retirement: Decimal
     monthly_contribution_needed: Decimal
@@ -90,6 +91,8 @@ class FireCalculationMetrics(BaseModel):
     coast_fi_target: Decimal
     coast_fi_gap: Decimal
     coast_fi_age: Optional[float] = None
+    coast_fi_year: Optional[int] = None
+    coast_fi_month: Optional[int] = None
     coast_fi_timeline_variance: Optional[float] = None
     is_coast_fi_achieved: bool = False
 
@@ -119,9 +122,14 @@ class FireScenarioSummary(BaseModel):
     monthly_contribution: Decimal
     real_full_fi_target: Decimal
     full_fi_age: Optional[float] = None
+    full_fi_year: Optional[int] = None
+    full_fi_month: Optional[int] = None
     full_fi_timeline_variance: Optional[float] = None
     gap_vs_current: Decimal
     is_coast_fi_achieved: bool
+    coast_fi_age: Optional[float] = None
+    coast_fi_year: Optional[int] = None
+    coast_fi_month: Optional[int] = None
     created_at: datetime
     updated_at: datetime
 

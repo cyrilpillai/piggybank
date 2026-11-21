@@ -174,9 +174,14 @@ async def list_scenarios(
                 monthly_contribution=contribution,
                 real_full_fi_target=metrics.real_full_fi_target,
                 full_fi_age=metrics.full_fi_age,
+                full_fi_year=metrics.full_fi_year,
+                full_fi_month=metrics.full_fi_month,
                 full_fi_timeline_variance=metrics.full_fi_timeline_variance,
                 gap_vs_current=metrics.gap_vs_current,
                 is_coast_fi_achieved=metrics.is_coast_fi_achieved,
+                coast_fi_age=metrics.coast_fi_age,
+                coast_fi_year=metrics.coast_fi_year,
+                coast_fi_month=metrics.coast_fi_month,
                 created_at=sc.created_at,
                 updated_at=sc.updated_at
             )
