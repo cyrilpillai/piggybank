@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Trash2, AlertTriangle, Loader2, X } from "lucide-react";
+import { COPY } from "@/constants/copy";
 
 interface ConfirmDialogProps {
   isOpen: boolean;
@@ -21,10 +22,10 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   isOpen,
   onClose,
   onConfirm,
-  title = "Confirm Action",
-  description = "Are you sure you want to proceed? This action cannot be undone.",
-  confirmText = "Delete",
-  cancelText = "Cancel",
+  title = COPY.COMMON.CONFIRM_ACTION,
+  description = COPY.COMMON.CONFIRM_DESC,
+  confirmText = COPY.COMMON.DELETE,
+  cancelText = COPY.COMMON.CANCEL,
   isDestructive = true,
   isLoading = false,
   error = null,
@@ -130,7 +131,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             {isLoading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Deleting...</span>
+                <span>{COPY.COMMON.DELETING}</span>
               </>
             ) : (
               <span>{confirmText}</span>

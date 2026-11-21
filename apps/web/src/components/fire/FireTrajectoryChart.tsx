@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { TrajectoryPoint } from "@/types";
 import { formatCurrencyAmount, formatCompactCurrency } from "@/lib/format";
+import { COPY } from "@/constants/copy";
 
 interface FireTrajectoryChartProps {
   trajectory: TrajectoryPoint[];
@@ -91,7 +92,7 @@ export const FireTrajectoryChart: React.FC<FireTrajectoryChartProps> = ({
   if (!points || points.length === 0) {
     return (
       <div className="h-64 flex items-center justify-center text-slate-500 text-xs">
-        No trajectory data available.
+        {COPY.FIRE.NO_TRAJECTORY}
       </div>
     );
   }
@@ -128,14 +129,14 @@ export const FireTrajectoryChart: React.FC<FireTrajectoryChartProps> = ({
   const activePoint = hoverIndex !== null ? points[hoverIndex] : null;
 
   return (
-    <div className="ios-glass-card rounded-[28px] p-5 border border-white/[0.08] relative">
+    <div className="rounded-[32px] ios-glass-card p-6 sm:p-8 shadow-ios-card relative space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div>
           <h3 className="text-base font-bold text-white flex items-center gap-2">
-            Portfolio Trajectory Curve
+            {COPY.FIRE.TRAJECTORY_TITLE}
           </h3>
           <p className="text-xs text-slate-400">
-            Real purchasing power growth against Coast FI threshold & Full FI target
+            {COPY.FIRE.TRAJECTORY_DESC}
           </p>
         </div>
 
@@ -143,15 +144,15 @@ export const FireTrajectoryChart: React.FC<FireTrajectoryChartProps> = ({
         <div className="flex flex-wrap items-center gap-4 text-[11px] font-semibold text-slate-300">
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-1 rounded-full bg-pink-400 shadow-[0_0_8px_rgba(244,114,182,0.6)]" />
-            <span>Projected Portfolio</span>
+            <span>{COPY.FIRE.PROJECTED_PORTFOLIO}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-0.5 border-t border-dashed border-cyan-400" />
-            <span>Coast FI Threshold</span>
+            <span>{COPY.FIRE.COAST_FI_THRESHOLD}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-0.5 border-t border-dotted border-amber-400" />
-            <span>Real FI Target</span>
+            <span>{COPY.FIRE.REAL_FI_TARGET}</span>
           </div>
         </div>
       </div>
@@ -225,7 +226,7 @@ export const FireTrajectoryChart: React.FC<FireTrajectoryChartProps> = ({
                 textAnchor="middle"
                 className="fill-slate-300 text-[10px] font-bold"
               >
-                Goal Age: {goalAge}
+                {COPY.FIRE.GOAL_AGE_PREFIX} {goalAge}
               </text>
             </g>
           )}
@@ -248,7 +249,7 @@ export const FireTrajectoryChart: React.FC<FireTrajectoryChartProps> = ({
                 textAnchor="middle"
                 className="fill-emerald-400 text-[10px] font-bold"
               >
-                FI Age: {fullFiAge}
+                {COPY.FIRE.FI_AGE_PREFIX} {fullFiAge}
               </text>
             </g>
           )}
@@ -340,28 +341,28 @@ export const FireTrajectoryChart: React.FC<FireTrajectoryChartProps> = ({
       {activePoint && (
         <div className="mt-3 ios-callout-info flex flex-wrap items-center justify-between gap-4 text-xs">
           <div>
-            <span className="text-slate-400 font-medium">Age & Year: </span>
+            <span className="text-slate-400 font-medium">{COPY.FIRE.AGE_YEAR} </span>
             <span className="font-bold text-white">
               {activePoint.age} yrs ({activePoint.year})
             </span>
           </div>
 
           <div>
-            <span className="text-pink-400 font-medium">Projected Portfolio: </span>
+            <span className="text-pink-400 font-medium">{COPY.FIRE.PROJECTED_PORTFOLIO}: </span>
             <span className="font-bold text-white">
               {formatCurrency(activePoint.raw.real_portfolio)}
             </span>
           </div>
 
           <div>
-            <span className="text-cyan-400 font-medium">Coast FI Threshold: </span>
+            <span className="text-cyan-400 font-medium">{COPY.FIRE.COAST_FI_THRESHOLD}: </span>
             <span className="font-bold text-white">
               {formatCurrency(activePoint.raw.coast_fi_target)}
             </span>
           </div>
 
           <div>
-            <span className="text-amber-400 font-medium">Target Nest Egg: </span>
+            <span className="text-amber-400 font-medium">{COPY.FIRE.TARGET_NEST_EGG} </span>
             <span className="font-bold text-white">
               {formatCurrency(activePoint.raw.real_full_fi_target)}
             </span>

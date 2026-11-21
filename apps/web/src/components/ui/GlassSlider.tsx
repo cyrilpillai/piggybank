@@ -133,7 +133,10 @@ export const GlassSlider: React.FC<GlassSliderProps> = ({
               disabled ? "opacity-50 cursor-not-allowed" : ""
             }`}
             style={{
-              background: `linear-gradient(to right, ${config.fillStart} 0%, ${config.fillEnd} ${percentage}%, rgba(255, 255, 255, 0.07) ${percentage}%, rgba(255, 255, 255, 0.07) 100%)`,
+              backgroundColor: "rgba(255, 255, 255, 0.07)",
+              backgroundImage: `linear-gradient(to right, ${config.fillStart}, ${config.fillEnd})`,
+              backgroundSize: `${percentage}% 100%`,
+              backgroundRepeat: "no-repeat",
             }}
           />
         </div>

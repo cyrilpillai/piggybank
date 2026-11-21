@@ -2,7 +2,7 @@
 
 import React from "react";
 import { FireCalculationMetrics } from "@/types";
-import { formatCompactCurrency, formatPercent } from "@/lib/format";
+import { formatCompactCurrency, formatPercent, formatMonthYear } from "@/lib/format";
 import { COPY } from "@/constants/copy";
 import { GlassProgressBar } from "@/components/ui/GlassProgressBar";
 import { Flame, ShieldCheck, CheckCircle2 } from "lucide-react";
@@ -48,9 +48,9 @@ export const FireProgressCards: React.FC<FireProgressCardsProps> = ({
   const coastFiFormatted = formatCompactCurrency(coastFiTarget, baseCurrency);
 
   return (
-    <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
       {/* 1. Full FI Corpus Progress */}
-      <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md space-y-3.5 shadow-sm">
+      <div className="p-3.5 sm:p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md space-y-2.5 shadow-sm">
         {/* Header Row: Title & Percentage Badge */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
@@ -88,13 +88,19 @@ export const FireProgressCards: React.FC<FireProgressCardsProps> = ({
           </div>
 
           <span className="text-[11px] text-slate-400 text-right">
-            Target at SWR {swrFormatted}%
+            {metrics.full_fi_year ? (
+              <>
+                Target: <strong className="text-slate-200 font-medium">{formatMonthYear(metrics.full_fi_year, metrics.full_fi_month)}</strong>
+              </>
+            ) : (
+              `Target at SWR ${swrFormatted}%`
+            )}
           </span>
         </div>
       </div>
 
       {/* 2. Coast FI Milestone Progress */}
-      <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md space-y-3.5 shadow-sm">
+      <div className="p-3.5 sm:p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md space-y-2.5 shadow-sm">
         {/* Header Row: Title & Percentage Badge */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
@@ -139,7 +145,17 @@ export const FireProgressCards: React.FC<FireProgressCardsProps> = ({
           </div>
 
           <span className="text-[11px] text-slate-400 text-right">
-            {goalAge ? `Needed to Coast to Age ${goalAge}` : "Needed to Coast"}
+            {metrics.is_coast_fi_achieved ? (
+              <span className="text-cyan-300 font-medium">Coast FI Achieved</span>
+            ) : metrics.coast_fi_year ? (
+              <>
+                Projected: <strong className="text-slate-200 font-medium">{formatMonthYear(metrics.coast_fi_year, metrics.coast_fi_month)}</strong>
+              </>
+            ) : goalAge ? (
+              `Needed to Coast to Age ${goalAge}`
+            ) : (
+              "Needed to Coast"
+            )}
           </span>
         </div>
       </div>

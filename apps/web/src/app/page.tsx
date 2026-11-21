@@ -23,6 +23,9 @@ import { MobileNav } from "@/components/layout/MobileNav";
 // Views & Modals
 import { LoginView } from "@/components/auth/LoginView";
 import { NetWorthCard } from "@/components/dashboard/NetWorthCard";
+import { NetWorthTrendCard } from "@/components/dashboard/NetWorthTrendCard";
+import { PortfolioTreemapCard } from "@/components/dashboard/PortfolioTreemapCard";
+import { HoldingsBarChartCard } from "@/components/dashboard/HoldingsBarChartCard";
 import { CategoryBreakdownCard } from "@/components/dashboard/CategoryBreakdownCard";
 import { FireOverviewCard } from "@/components/dashboard/FireOverviewCard";
 import { AssetList } from "@/components/assets/AssetList";
@@ -69,6 +72,7 @@ export default function HomePage() {
   const [liabilities, setLiabilities] = useState<Liability[]>([]);
   const [primaryFireScenario, setPrimaryFireScenario] = useState<FireScenario | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [historyRefreshTrigger, setHistoryRefreshTrigger] = useState<number>(0);
 
   // --- Modal States ---
   const [isAssetModalOpen, setIsAssetModalOpen] = useState(false);
@@ -145,6 +149,7 @@ export default function HomePage() {
         if (ratesRes?.rates) {
           setRates(ratesRes.rates);
         }
+        setHistoryRefreshTrigger((prev) => prev + 1);
 
         // Fetch active/default FIRE scenario metrics for the Overview card
         if (fireScenarios && fireScenarios.length > 0) {
@@ -159,7 +164,7 @@ export default function HomePage() {
           setPrimaryFireScenario(null);
         }
       } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : "Failed to load financial data";
+        const msg = err instanceof Error ? err.message : COPY.OVERVIEW.ERROR_LOAD;
         setErrorMessage(msg);
       }
     },
@@ -327,7 +332,7 @@ export default function HomePage() {
             <PiggyLogo className="h-7 w-7 stroke-[2.4] text-pink-400 animate-pulse" />
           </div>
           <span className="text-base font-bold tracking-tight text-white">
-            Loading Piggybank...
+            {COPY.APP.LOADING}
           </span>
           <Loader2 className="h-5 w-5 animate-spin text-pink-400" />
         </div>
@@ -392,7 +397,7 @@ export default function HomePage() {
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 font-semibold transition"
               >
                 <RefreshCw className="h-3 w-3" />
-                <span>Retry</span>
+                <span>{COPY.COMMON.RETRY}</span>
               </button>
             </div>
           )}
@@ -423,7 +428,7 @@ export default function HomePage() {
               />
 
               {/* Asset & Liability Category Breakdowns */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
                 <CategoryBreakdownCard
                   title={COPY.CATEGORIES.ASSET_TITLE}
                   type="asset"
@@ -453,73 +458,42 @@ export default function HomePage() {
                 />
               </div>
 
-              {/* Top Assets Quick View */}
-              <div className="rounded-[32px] ios-glass-card p-6 space-y-4 shadow-ios-card">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="h-9 w-9 rounded-xl ios-icon-box ios-icon-box-emerald">
-                      <TrendingUp className="h-4 w-4" />
-                    </div>
-                    <h3 className="text-base font-bold text-white tracking-tight">Top Assets</h3>
-                  </div>
-                  <button
-                    onClick={() => setActiveTab("assets")}
-                    className="text-xs text-slate-300 hover:text-white font-semibold transition ios-glass-pill px-3.5 py-1.5 rounded-full"
-                  >
-                    View All ({assets.length}) →
-                  </button>
-                </div>
-
-                <AssetList
-                  assets={topAssets}
+              {/* Net Worth Trend Row (Left: Progression Line Chart, Right: Portfolio Diversification Treemap) */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+                <NetWorthTrendCard
+                  currencySymbol={currentSymbol}
+                  baseCurrency={baseCurrency}
+                  refreshTrigger={historyRefreshTrigger}
+                />
+                <PortfolioTreemapCard
+                  assets={assets}
+                  currencySymbol={currentSymbol}
                   baseCurrency={baseCurrency}
                   rates={rates}
-                  showFilters={false}
-                  compactAmounts={true}
-                  onEdit={(asset) => {
-                    setEditingAsset(asset);
-                    setIsAssetModalOpen(true);
-                  }}
-                  onDelete={handleDeleteAsset}
-                  onAddNew={() => {
-                    setEditingAsset(null);
-                    setIsAssetModalOpen(true);
-                  }}
+                  onViewAll={() => setActiveTab("assets")}
                 />
               </div>
 
-              {/* Top Liabilities Quick View */}
-              <div className="rounded-[32px] ios-glass-card p-6 space-y-4 shadow-ios-card">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <div className="h-9 w-9 rounded-xl ios-icon-box ios-icon-box-rose">
-                      <TrendingDown className="h-4 w-4" />
-                    </div>
-                    <h3 className="text-base font-bold text-white tracking-tight">Top Liabilities</h3>
-                  </div>
-                  <button
-                    onClick={() => setActiveTab("liabilities")}
-                    className="text-xs text-slate-300 hover:text-white font-semibold transition ios-glass-pill px-3.5 py-1.5 rounded-full"
-                  >
-                    View All ({liabilities.length}) →
-                  </button>
-                </div>
-
-                <LiabilityList
-                  liabilities={topLiabilities}
+              {/* Bottom Row: Individual Bar Chart Cards for Asset & Liability Holdings */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+                <HoldingsBarChartCard
+                  title={COPY.OVERVIEW.TOP_ASSETS}
+                  type="asset"
+                  items={assets}
+                  currencySymbol={currentSymbol}
                   baseCurrency={baseCurrency}
                   rates={rates}
-                  showFilters={false}
-                  compactAmounts={true}
-                  onEdit={(liability) => {
-                    setEditingLiability(liability);
-                    setIsLiabilityModalOpen(true);
-                  }}
-                  onDelete={handleDeleteLiability}
-                  onAddNew={() => {
-                    setEditingLiability(null);
-                    setIsLiabilityModalOpen(true);
-                  }}
+                  onViewAll={() => setActiveTab("assets")}
+                />
+
+                <HoldingsBarChartCard
+                  title={COPY.OVERVIEW.TOP_LIABILITIES}
+                  type="liability"
+                  items={liabilities}
+                  currencySymbol={currentSymbol}
+                  baseCurrency={baseCurrency}
+                  rates={rates}
+                  onViewAll={() => setActiveTab("liabilities")}
                 />
               </div>
             </div>
@@ -721,7 +695,7 @@ export default function HomePage() {
             ? COPY.ASSETS.DELETE_DESC
             : COPY.LIABILITIES.DELETE_DESC
         }
-        confirmText="Delete Entry"
+        confirmText={COPY.COMMON.DELETE_ENTRY}
         cancelText={COPY.COMMON.CANCEL}
         isDestructive={true}
         isLoading={isDeleting}

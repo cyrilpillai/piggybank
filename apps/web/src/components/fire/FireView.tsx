@@ -286,7 +286,7 @@ export const FireView: React.FC<FireViewProps> = ({
                   ({currencySymbol}{formatCompactCurrency(Number(activeScenario.metrics.current_liquid_portfolio), baseCurrency).full})
                 </span>
               )}{" "}
-              (Automatically aggregated from liquid assets only; physical real estate & vehicles are excluded).
+              (Automatically aggregated from liquid assets only).
             </span>
           </div>
           <GlassDatePicker

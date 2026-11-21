@@ -5,6 +5,7 @@ import { FireScenario } from "@/types";
 import { formatCurrencyAmount, formatPercent } from "@/lib/format";
 import { Sliders, Save, RotateCcw, HelpCircle } from "lucide-react";
 import { GlassSlider } from "@/components/ui/GlassSlider";
+import { COPY } from "@/constants/copy";
 
 interface FireInputFormProps {
   scenario: FireScenario;
@@ -131,7 +132,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSave} className="ios-glass-card rounded-[28px] p-6 border border-white/[0.08] space-y-6">
+    <form onSubmit={handleSave} className="rounded-[32px] ios-glass-card p-6 sm:p-8 shadow-ios-card space-y-6">
       {/* Card Header Toolbar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/[0.06]">
         <div className="flex items-center gap-3">
@@ -139,9 +140,9 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
             <Sliders className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white">Interactive Assumptions</h3>
+            <h3 className="text-base font-bold text-white">{COPY.FIRE_FORM.SECTION_TITLE}</h3>
             <p className="text-xs text-slate-400">
-              Drag sliders or enter values to test what-if scenarios in real-time
+              {COPY.FIRE_FORM.SECTION_DESC}
             </p>
           </div>
         </div>
@@ -153,7 +154,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
             className="px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 transition inline-flex items-center gap-1.5"
           >
             <RotateCcw className="h-3.5 w-3.5" />
-            <span>Reset</span>
+            <span>{COPY.FIRE_FORM.RESET}</span>
           </button>
           <button
             type="submit"
@@ -161,7 +162,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
             className="px-5 py-2 rounded-xl text-xs font-bold text-white ios-btn-primary shadow-glass-glow transition inline-flex items-center gap-1.5 disabled:opacity-50"
           >
             <Save className="h-3.5 w-3.5" />
-            <span>{isSaving ? "Saving..." : "Save to Plan"}</span>
+            <span>{isSaving ? COPY.COMMON.SAVING : COPY.FIRE_FORM.SAVE_CHANGES}</span>
           </button>
         </div>
       </div>
@@ -173,7 +174,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
           <div className="flex justify-between items-center text-xs">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-white/70 shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
-              <label className="font-semibold text-slate-200">Monthly Expenses in Retirement</label>
+              <label className="font-semibold text-slate-200">{COPY.FIRE_FORM.MONTHLY_EXPENSES}</label>
             </div>
             <span className="font-mono font-bold text-white">
               {currencySymbol}{formatCurrencyAmount(expenses, baseCurrency, 0)}
@@ -207,7 +208,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
           <div className="flex justify-between items-center text-xs">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-              <label className="font-semibold text-slate-200">Current Monthly Contribution</label>
+              <label className="font-semibold text-slate-200">{COPY.FIRE_FORM.MONTHLY_CONTRIBUTION}</label>
             </div>
             <span className="font-mono font-bold text-emerald-400">
               {currencySymbol}{formatCurrencyAmount(contribution, baseCurrency, 0)}
@@ -241,7 +242,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
           <div className="flex justify-between items-center text-xs">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
-              <label className="font-semibold text-slate-200">Retirement Age Goal</label>
+              <label className="font-semibold text-slate-200">{COPY.FIRE_FORM.TARGET_AGE}</label>
             </div>
             <span className="font-mono font-bold text-cyan-400">Age {goalAge}</span>
           </div>
@@ -266,7 +267,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)]" />
               <div className="flex items-center gap-1.5">
-                <label className="font-semibold text-slate-200">Safe Withdrawal Rate (SWR)</label>
+                <label className="font-semibold text-slate-200">{COPY.FIRE_FORM.SWR}</label>
                 <span
                   title="Standard rule of thumb is 4.0% (Trinity Study). Lower rate (e.g. 3.5%) is more conservative."
                   className="cursor-help text-slate-500 hover:text-slate-300 transition"
@@ -297,7 +298,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
           <div className="flex justify-between items-center text-xs">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-pink-400 shadow-[0_0_8px_rgba(244,114,182,0.8)]" />
-              <label className="font-semibold text-slate-200">Expected Annual Return</label>
+              <label className="font-semibold text-slate-200">{COPY.FIRE_FORM.ANNUAL_RETURN}</label>
             </div>
             <span className="font-mono font-bold text-pink-400">{formatPercent(annualReturn, 1)}</span>
           </div>
@@ -321,7 +322,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
           <div className="flex justify-between items-center text-xs">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-slate-300 shadow-[0_0_8px_rgba(203,213,225,0.7)]" />
-              <label className="font-semibold text-slate-200">Expected Annual Inflation</label>
+              <label className="font-semibold text-slate-200">{COPY.FIRE_FORM.INFLATION}</label>
             </div>
             <span className="font-mono font-bold text-slate-300">{formatPercent(inflation, 1)}</span>
           </div>
@@ -345,7 +346,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
           <div className="flex justify-between items-center text-xs">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,0.8)]" />
-              <label className="font-semibold text-slate-200">Retirement Tax Rate</label>
+              <label className="font-semibold text-slate-200">{COPY.FIRE_FORM.TAX_RATE}</label>
             </div>
             <span className="font-mono font-bold text-purple-300">{formatPercent(taxRate, 1)}</span>
           </div>
@@ -369,7 +370,7 @@ export const FireInputForm: React.FC<FireInputFormProps> = ({
           <div className="flex justify-between items-center text-xs">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
-              <label className="font-semibold text-slate-200">Yearly Contribution Step-Up</label>
+              <label className="font-semibold text-slate-200">{COPY.FIRE_FORM.GROWTH_RATE}</label>
             </div>
             <span className="font-mono font-bold text-emerald-300">{formatPercent(growthRate, 1)}</span>
           </div>

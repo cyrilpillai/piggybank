@@ -6,6 +6,7 @@ import { LogOut } from "lucide-react";
 import { PiggyLogo } from "@/components/ui/PiggyLogo";
 import { GlassSelect } from "@/components/ui/GlassSelect";
 import { getCurrencySymbol } from "@/lib/format";
+import { COPY } from "@/constants/copy";
 
 interface NavbarProps {
   user: User | null;
@@ -41,7 +42,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   });
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/[0.08] bg-slate-950/65 backdrop-blur-2xl shadow-[0_4px_30px_rgba(0,0,0,0.35)]">
+    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-slate-950/50 backdrop-blur-3xl shadow-[0_4px_30px_rgba(0,0,0,0.4)]">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand */}
         <div className="flex items-center gap-3">
@@ -51,11 +52,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div>
             <div className="flex items-center gap-1.5">
               <span className="text-lg font-bold tracking-tight text-white drop-shadow-sm">
-                Piggybank
+                {COPY.APP.NAME}
               </span>
             </div>
             <p className="hidden sm:block text-[10px] text-pink-300 font-medium">
-              Personal Wealth OS
+              {COPY.APP.TAGLINE}
             </p>
           </div>
         </div>
@@ -98,7 +99,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
               <button
                 onClick={onLogout}
-                title="Sign Out"
+                title={COPY.NAV.SIGN_OUT}
                 className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-white/10 rounded-full transition"
               >
                 <LogOut className="h-4 w-4" />

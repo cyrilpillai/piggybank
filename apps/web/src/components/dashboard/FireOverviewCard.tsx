@@ -6,6 +6,7 @@ import {
   formatCompactCurrency,
   formatPercent,
   formatYearsVariance,
+  formatMonthYear,
 } from "@/lib/format";
 import { COPY } from "@/constants/copy";
 import { FireProgressCards } from "@/components/fire/FireProgressCards";
@@ -36,7 +37,7 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
   // If no scenario is created yet, render an inviting onboarding / configuration prompt
   if (!scenario || !scenario.metrics) {
     return (
-      <div className="relative overflow-hidden rounded-[32px] ios-glass-card p-6 sm:p-7 shadow-ios-card">
+      <div className="relative overflow-hidden rounded-[32px] ios-glass-card p-6 sm:p-8 shadow-ios-card">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
           <div className="flex items-start gap-4">
             <div className="h-12 w-12 rounded-2xl ios-icon-box ios-icon-box-pink shrink-0 shadow-glass-glow flex items-center justify-center">
@@ -99,16 +100,16 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
   const coastFiFormatted = formatCompactCurrency(coastFiTarget, baseCurrency);
 
   return (
-    <div className="relative overflow-hidden rounded-[32px] ios-glass-card p-6 sm:p-8 shadow-ios-card space-y-6">
+    <div className="relative overflow-hidden rounded-[32px] ios-glass-card p-6 sm:p-8 shadow-ios-card space-y-3">
       {/* Ambient background glow accents */}
       <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-pink-500/10 blur-3xl pointer-events-none" />
       <div className="absolute -left-20 -bottom-20 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />
 
       {/* Header Row */}
-      <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-2xl ios-icon-box ios-icon-box-pink shadow-glass-glow flex items-center justify-center">
-            <Flame className="h-5 w-5 text-pink-400 fill-pink-500/20" />
+      <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2.5 border-b border-white/[0.08]">
+        <div className="flex items-center gap-2.5">
+          <div className="h-9 w-9 rounded-xl ios-icon-box ios-icon-box-pink shrink-0">
+            <Flame className="h-4 w-4 text-pink-400 fill-pink-500/20" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -151,9 +152,9 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
       />
 
       {/* Metric Cards Grid */}
-      <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+      <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-3.5">
         {/* Metric 1: Projected Full FI Timeline */}
-        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col justify-between space-y-3">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col justify-between space-y-2.5">
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-[11px] font-bold uppercase tracking-wider">Projected FI Timeline</span>
             <Clock className="h-4 w-4 text-cyan-400" />
@@ -166,7 +167,9 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
                 : "Unattainable"}
             </div>
             <p className="text-[11px] text-slate-400 mt-0.5">
-              {metrics.full_fi_year ? `Target Year: ${metrics.full_fi_year}` : "Adjust savings or return rate"}
+              {metrics.full_fi_year
+                ? `Target: ${formatMonthYear(metrics.full_fi_year, metrics.full_fi_month)}`
+                : "Adjust savings or return rate"}
             </p>
           </div>
 
@@ -193,7 +196,7 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
         </div>
 
         {/* Metric 2: Primary FIRE Coast Milestone */}
-        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col justify-between space-y-3">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col justify-between space-y-2.5">
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-[11px] font-bold uppercase tracking-wider">{COPY.FIRE.COAST_FI_MILESTONE}</span>
             <ShieldCheck className="h-4 w-4 text-purple-400" />
@@ -207,7 +210,11 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
               <span className="text-xs text-slate-400">{COPY.FIRE.TARGET}</span>
             </div>
             <p className="text-[11px] text-slate-400 mt-0.5">
-              {COPY.FIRE.COAST_TARGET_DESC}
+              {metrics.is_coast_fi_achieved
+                ? `Achieved • ${formatMonthYear(metrics.coast_fi_year, metrics.coast_fi_month)}`
+                : metrics.coast_fi_year
+                ? `Projected Coast: ${formatMonthYear(metrics.coast_fi_year, metrics.coast_fi_month)}${metrics.coast_fi_age ? ` (Age ${metrics.coast_fi_age})` : ""}`
+                : COPY.FIRE.COAST_TARGET_DESC}
             </p>
           </div>
 
@@ -220,7 +227,7 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
             ) : (
               <div className="flex items-center justify-between text-[10px]">
                 <span className="text-slate-400 font-medium">
-                  {COPY.FIRE.PROGRESS} <strong className="text-white">{formatPercent(coastPercent, 0)}</strong>
+                  {COPY.FIRE.PROGRESS} <strong className="text-white">{formatPercent(coastPercent, 1)}</strong>
                 </span>
                 <span className="text-amber-300 font-semibold">
                   {COPY.FIRE.GAP} {currencySymbol}{formatCompactCurrency(Math.abs(Number(metrics.coast_fi_gap)), baseCurrency).compact}
@@ -231,7 +238,7 @@ export const FireOverviewCard: React.FC<FireOverviewCardProps> = ({
         </div>
 
         {/* Metric 3: Monthly Savings Target & Contribution Pace */}
-        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col justify-between space-y-3 sm:col-span-2 lg:col-span-1">
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex flex-col justify-between space-y-2.5 sm:col-span-2 lg:col-span-1">
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-[11px] font-bold uppercase tracking-wider">{COPY.FIRE.MONTHLY_SAVINGS_PACE}</span>
             <Wallet className="h-4 w-4 text-emerald-400" />

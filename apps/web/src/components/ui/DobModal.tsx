@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Calendar } from "lucide-react";
 import { GlassSelect } from "@/components/ui/GlassSelect";
 import { GlassModal } from "@/components/ui/GlassModal";
+import { COPY } from "@/constants/copy";
 
 interface DobModalProps {
   isOpen: boolean;
@@ -109,7 +110,7 @@ export const DobModal: React.FC<DobModalProps> = ({
       await onSave(formattedDate);
       onClose();
     } catch (err: any) {
-      setError(err.message || "Failed to save date of birth.");
+      setError(err.message || COPY.DOB.ERROR_DEFAULT);
     } finally {
       setIsSubmitting(false);
     }
@@ -119,8 +120,8 @@ export const DobModal: React.FC<DobModalProps> = ({
     <GlassModal
       isOpen={isOpen}
       onClose={onClose}
-      title="Date of Birth"
-      description="Determines your current age and FIRE milestone timeline"
+      title={COPY.DOB.TITLE}
+      description={COPY.DOB.DESC}
       icon={<Calendar className="h-5 w-5" />}
       iconColor="pink"
       maxWidth="lg"
@@ -134,7 +135,7 @@ export const DobModal: React.FC<DobModalProps> = ({
             disabled={isSubmitting}
             className="px-5 py-2.5 rounded-2xl ios-btn-secondary text-sm"
           >
-            Cancel
+            {COPY.COMMON.CANCEL}
           </button>
           <button
             type="submit"
@@ -142,7 +143,7 @@ export const DobModal: React.FC<DobModalProps> = ({
             disabled={isSubmitting}
             className="px-6 py-2.5 rounded-2xl ios-btn-primary text-sm shadow-glass-glow disabled:opacity-50"
           >
-            {isSubmitting ? "Saving..." : "Save Date of Birth"}
+            {isSubmitting ? COPY.COMMON.SAVING : COPY.DOB.SAVE}
           </button>
         </>
       }
@@ -153,7 +154,7 @@ export const DobModal: React.FC<DobModalProps> = ({
           {/* Day */}
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              Day
+              {COPY.DOB.DAY}
             </label>
             <GlassSelect
               value={day}
@@ -166,7 +167,7 @@ export const DobModal: React.FC<DobModalProps> = ({
           {/* Month */}
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              Month
+              {COPY.DOB.MONTH}
             </label>
             <GlassSelect
               value={month}
@@ -178,7 +179,7 @@ export const DobModal: React.FC<DobModalProps> = ({
           {/* Year */}
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              Year
+              {COPY.DOB.YEAR}
             </label>
             <GlassSelect
               value={year}
@@ -192,9 +193,9 @@ export const DobModal: React.FC<DobModalProps> = ({
         {/* Age Indicator Callout */}
         {calculatedAge !== null && (
           <div className="flex items-center justify-between px-4 py-3 rounded-2xl bg-white/[0.04] border border-white/[0.08] text-xs">
-            <span className="text-slate-400">Calculated Current Age:</span>
+            <span className="text-slate-400">{COPY.DOB.CALCULATED_AGE}</span>
             <span className="font-mono font-bold text-white bg-pink-500/20 px-2.5 py-0.5 rounded-full border border-pink-500/30 text-pink-300">
-              {calculatedAge} years old
+              {calculatedAge} {COPY.DOB.YEARS_OLD}
             </span>
           </div>
         )}

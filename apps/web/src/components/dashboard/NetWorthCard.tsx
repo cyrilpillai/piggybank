@@ -42,7 +42,7 @@ export const NetWorthCard: React.FC<NetWorthCardProps> = ({
             </span>
             <span className="ios-badge ios-badge-neutral text-[10px]">
               <Sparkles className="h-3 w-3 text-pink-300" />
-              FX Converted
+              {COPY.NET_WORTH.FX_CONVERTED}
             </span>
           </div>
 

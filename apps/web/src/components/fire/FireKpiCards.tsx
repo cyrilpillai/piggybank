@@ -2,7 +2,12 @@
 
 import React from "react";
 import { FireCalculationMetrics } from "@/types";
-import { formatCurrencyAmount, formatCompactCurrency, formatYearsVariance } from "@/lib/format";
+import {
+  formatCurrencyAmount,
+  formatCompactCurrency,
+  formatYearsVariance,
+  formatMonthYear,
+} from "@/lib/format";
 import { COPY } from "@/constants/copy";
 import { Target, Clock, Wallet, ShieldCheck, AlertCircle, Sparkles } from "lucide-react";
 
@@ -76,7 +81,9 @@ export const FireKpiCards: React.FC<FireKpiCardsProps> = ({
               : "Unattainable"}
           </div>
           <p className="text-[11px] text-slate-400 mt-1">
-            {metrics.full_fi_year ? `Target Year: ${metrics.full_fi_year}` : "Adjust parameters"}
+            {metrics.full_fi_year
+              ? `Target: ${formatMonthYear(metrics.full_fi_year, metrics.full_fi_month)}`
+              : "Adjust parameters"}
           </p>
         </div>
 
@@ -144,7 +151,13 @@ export const FireKpiCards: React.FC<FireKpiCardsProps> = ({
           <div className="text-2xl font-black text-white tracking-tight">
             {formatCurrency(metrics.coast_fi_target)}
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">Invested FIRE Capital: {formatCurrency(metrics.current_liquid_portfolio)}</p>
+          <p className="text-[11px] text-slate-400 mt-1">
+            {metrics.is_coast_fi_achieved
+              ? `Coast FI Achieved • ${formatMonthYear(metrics.coast_fi_year, metrics.coast_fi_month)}`
+              : metrics.coast_fi_year
+              ? `Projected Coast: ${formatMonthYear(metrics.coast_fi_year, metrics.coast_fi_month)}${metrics.coast_fi_age ? ` (Age ${metrics.coast_fi_age})` : ""}`
+              : `Invested FIRE Capital: ${formatCurrency(metrics.current_liquid_portfolio)}`}
+          </p>
         </div>
 
         <div className="mt-4 pt-3 border-t border-white/[0.06]">

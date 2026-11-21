@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { FireScenario, FireScenarioSummary } from "@/types";
-import { formatCurrencyAmount, formatCompactCurrency, formatPercent } from "@/lib/format";
+import { formatCurrencyAmount, formatCompactCurrency, formatPercent, formatMonthYear } from "@/lib/format";
 import { api } from "@/lib/api";
 import { Layers, Check } from "lucide-react";
 import { GlassModal } from "@/components/ui/GlassModal";
+import { COPY } from "@/constants/copy";
 
 interface CompareScenariosModalProps {
   isOpen: boolean;
@@ -77,8 +78,8 @@ export const CompareScenariosModal: React.FC<CompareScenariosModalProps> = ({
     <GlassModal
       isOpen={isOpen}
       onClose={onClose}
-      title="Compare FIRE Scenarios"
-      description="Select 2 to 4 scenarios to evaluate timelines and targets side by side"
+      title={COPY.FIRE.COMPARE_TITLE}
+      description={COPY.FIRE.COMPARE_DESC}
       icon={<Layers className="h-5 w-5" />}
       iconColor="pink"
       maxWidth="4xl"
@@ -87,14 +88,14 @@ export const CompareScenariosModal: React.FC<CompareScenariosModalProps> = ({
           onClick={onClose}
           className="px-5 py-2.5 rounded-2xl text-xs font-semibold text-slate-300 hover:text-white ios-btn-secondary transition"
         >
-          Close
+          {COPY.COMMON.CLOSE}
         </button>
       }
     >
       <div className="space-y-4">
         {/* Scenario Selection Chips */}
         <div className="flex flex-wrap items-center gap-2 pb-2 shrink-0">
-          <span className="text-xs text-slate-400 mr-1">Compare:</span>
+          <span className="text-xs text-slate-400 mr-1">{COPY.FIRE.COMPARE_PLANS}:</span>
           {availableScenarios.map((sc) => {
             const isSelected = selectedIds.includes(sc.id);
             return (
@@ -118,11 +119,11 @@ export const CompareScenariosModal: React.FC<CompareScenariosModalProps> = ({
         {/* Comparison Table */}
         {isLoading ? (
           <div className="py-16 text-center text-xs text-slate-400 flex flex-col items-center justify-center gap-2">
-            <span>Loading scenario metrics...</span>
+            <span>{COPY.FIRE.COMPARE_LOADING}</span>
           </div>
         ) : comparedData.length === 0 ? (
           <div className="py-16 text-center text-xs text-slate-400">
-            Please select at least one scenario to view comparisons.
+            {COPY.FIRE.COMPARE_EMPTY}
           </div>
         ) : (
           <div className="flex-1 overflow-auto rounded-2xl border border-white/[0.08] bg-white/[0.02]">
@@ -152,10 +153,15 @@ export const CompareScenariosModal: React.FC<CompareScenariosModalProps> = ({
                 </tr>
 
                 <tr>
-                  <td className="py-3 px-4 font-medium text-slate-400">Projected FI Age</td>
+                  <td className="py-3 px-4 font-medium text-slate-400">Projected FI Timeline</td>
                   {comparedData.map((sc) => (
                     <td key={sc.id} className="py-3 px-4 font-bold text-cyan-400 font-mono">
-                      {sc.metrics.full_fi_age ? `Age ${sc.metrics.full_fi_age}` : "Unattainable"}
+                      {sc.metrics.full_fi_age ? `Age ${sc.metrics.full_fi_age}` : COPY.FIRE.COMPARE_UNATTAINABLE}
+                      {sc.metrics.full_fi_year && (
+                        <span className="block text-[11px] text-slate-400 font-normal">
+                          {formatMonthYear(sc.metrics.full_fi_year, sc.metrics.full_fi_month)}
+                        </span>
+                      )}
                     </td>
                   ))}
                 </tr>
@@ -215,16 +221,34 @@ export const CompareScenariosModal: React.FC<CompareScenariosModalProps> = ({
                 </tr>
 
                 <tr>
-                  <td className="py-3 px-4 font-medium text-slate-400">Coast FI Attained?</td>
+                  <td className="py-3 px-4 font-medium text-slate-400">Coast FI Timeline</td>
                   {comparedData.map((sc) => (
                     <td key={sc.id} className="py-3 px-4">
                       {sc.metrics.is_coast_fi_achieved ? (
-                        <span className="ios-badge ios-badge-emerald text-[10px]">
-                          Attained
-                        </span>
+                        <div className="space-y-0.5">
+                          <span className="ios-badge ios-badge-emerald text-[10px]">
+                            {COPY.FIRE.COMPARE_ATTAINED}
+                          </span>
+                          {sc.metrics.coast_fi_year && (
+                            <span className="block text-[10px] text-slate-400 font-mono">
+                              {formatMonthYear(sc.metrics.coast_fi_year, sc.metrics.coast_fi_month)}
+                            </span>
+                          )}
+                        </div>
+                      ) : sc.metrics.coast_fi_year ? (
+                        <div className="space-y-0.5">
+                          <span className="text-purple-300 font-mono text-xs font-semibold">
+                            {formatMonthYear(sc.metrics.coast_fi_year, sc.metrics.coast_fi_month)}
+                          </span>
+                          {sc.metrics.coast_fi_age && (
+                            <span className="block text-[10px] text-slate-400 font-mono">
+                              Age {sc.metrics.coast_fi_age}
+                            </span>
+                          )}
+                        </div>
                       ) : (
                         <span className="ios-badge ios-badge-rose text-[10px]">
-                          Pending
+                          {COPY.FIRE.COMPARE_PENDING}
                         </span>
                       )}
                     </td>

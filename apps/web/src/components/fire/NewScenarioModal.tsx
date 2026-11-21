@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Sparkles } from "lucide-react";
 import { GlassModal } from "@/components/ui/GlassModal";
+import { COPY } from "@/constants/copy";
 
 interface NewScenarioModalProps {
   isOpen: boolean;
@@ -62,8 +63,8 @@ export const NewScenarioModal: React.FC<NewScenarioModalProps> = ({
     <GlassModal
       isOpen={isOpen}
       onClose={onClose}
-      title="New FIRE Scenario"
-      description="Configure parameters for a retirement timeline model"
+      title={COPY.FIRE.NEW_SCENARIO_TITLE}
+      description={COPY.FIRE.NEW_SCENARIO_DESC}
       icon={<Sparkles className="h-5 w-5" />}
       iconColor="pink"
       maxWidth="lg"
@@ -76,7 +77,7 @@ export const NewScenarioModal: React.FC<NewScenarioModalProps> = ({
             disabled={isSubmitting}
             className="px-5 py-2.5 rounded-2xl ios-btn-secondary text-xs font-semibold"
           >
-            Cancel
+            {COPY.COMMON.CANCEL}
           </button>
           <button
             type="submit"
@@ -84,7 +85,7 @@ export const NewScenarioModal: React.FC<NewScenarioModalProps> = ({
             disabled={isSubmitting || !name.trim()}
             className="px-6 py-2.5 rounded-2xl text-xs font-bold text-white ios-btn-primary shadow-glass-glow disabled:opacity-50 transition"
           >
-            {isSubmitting ? "Creating..." : "Create Plan"}
+            {isSubmitting ? COPY.COMMON.SAVING : COPY.FIRE_FORM.CREATE_BUTTON}
           </button>
         </>
       }
@@ -92,12 +93,12 @@ export const NewScenarioModal: React.FC<NewScenarioModalProps> = ({
       <form id="new-scenario-form" onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-xs font-semibold text-slate-300 mb-1">
-            Scenario Name *
+            {COPY.FIRE_FORM.SCENARIO_NAME} *
           </label>
           <input
             type="text"
             required
-            placeholder="e.g. Lean FIRE, Fat FIRE, Barista Mode, Coasting at 45"
+            placeholder={COPY.FIRE_FORM.SCENARIO_NAME_PLACEHOLDER}
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full px-3.5 py-2.5 rounded-2xl ios-glass-input text-xs text-white placeholder-slate-500 focus:outline-none"
@@ -106,11 +107,11 @@ export const NewScenarioModal: React.FC<NewScenarioModalProps> = ({
 
         <div>
           <label className="block text-xs font-semibold text-slate-300 mb-1">
-            Description (Optional)
+            {COPY.FIRE_FORM.DESCRIPTION}
           </label>
           <input
             type="text"
-            placeholder="e.g. Higher equity allocation, lower retirement spending in Tier-2 city"
+            placeholder={COPY.FIRE_FORM.DESCRIPTION_PLACEHOLDER}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="w-full px-3.5 py-2.5 rounded-2xl ios-glass-input text-xs text-white placeholder-slate-500 focus:outline-none"

@@ -73,6 +73,25 @@ export interface DashboardResponse {
   liability_categories: CategoryBreakdown[];
 }
 
+export type HistoryRange = "1M" | "3M" | "6M" | "1Y" | "ALL";
+
+export interface NetWorthHistoryPoint {
+  date: string;
+  net_worth: number | string;
+  total_assets: number | string;
+  total_liabilities: number | string;
+}
+
+export interface NetWorthHistoryResponse {
+  currency: string;
+  range: string;
+  start_date: string;
+  end_date: string;
+  net_change: number | string;
+  percentage_change: number;
+  points: NetWorthHistoryPoint[];
+}
+
 export interface CurrencyItem {
   code: string;
   name: string;
@@ -133,6 +152,7 @@ export interface FireCalculationMetrics {
   years_to_goal_age: number;
   full_fi_age?: number | null;
   full_fi_year?: number | null;
+  full_fi_month?: number | null;
   full_fi_timeline_variance?: number | null;
   projected_portfolio_at_retirement: number | string;
   monthly_contribution_needed: number | string;
@@ -141,6 +161,8 @@ export interface FireCalculationMetrics {
   coast_fi_target: number | string;
   coast_fi_gap: number | string;
   coast_fi_age?: number | null;
+  coast_fi_year?: number | null;
+  coast_fi_month?: number | null;
   coast_fi_timeline_variance?: number | null;
   is_coast_fi_achieved: boolean;
   current_liquid_portfolio: number | string;
@@ -179,9 +201,14 @@ export interface FireScenarioSummary {
   monthly_contribution: number | string;
   real_full_fi_target: number | string;
   full_fi_age?: number | null;
+  full_fi_year?: number | null;
+  full_fi_month?: number | null;
   full_fi_timeline_variance?: number | null;
   gap_vs_current: number | string;
   is_coast_fi_achieved: boolean;
+  coast_fi_age?: number | null;
+  coast_fi_year?: number | null;
+  coast_fi_month?: number | null;
   created_at: string;
   updated_at: string;
 }

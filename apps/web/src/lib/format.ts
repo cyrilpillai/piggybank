@@ -361,6 +361,34 @@ export function formatAge(age: number | null | undefined): string {
   return `${age} yrs`;
 }
 
+const SHORT_MONTH_NAMES = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
+
+const FULL_MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+/**
+ * Formats year and month into readable display text (e.g. "Oct 2038" or "October 2038").
+ * Falls back to year string if month is missing or invalid.
+ */
+export function formatMonthYear(
+  year?: number | null,
+  month?: number | null,
+  options?: { full?: boolean }
+): string {
+  if (!year) return "";
+  const m = Number(month);
+  if (!m || isNaN(m) || m < 1 || m > 12) return `${year}`;
+  const monthName = options?.full
+    ? FULL_MONTH_NAMES[m - 1]
+    : SHORT_MONTH_NAMES[m - 1];
+  return `${monthName} ${year}`;
+}
+
 /**
  * Interface representing any generic split item (for donut charts, progress bars, legends).
  */

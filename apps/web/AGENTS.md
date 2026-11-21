@@ -22,6 +22,12 @@
 - **Viewport Bounds & Eager Display:** Design modals and forms to fit standard viewports eagerly (~400-500px total height on desktop/laptop). Group related fields into multi-column rows (e.g. 12-column grid) to prevent unnecessary scrolling.
 - **Scroll Performance:** Never add nested `overflow-y-auto` containers. Avoid redundant `backdrop-filter` on child elements inside already blurred glass cards.
 
+## Copy & Text Centralization Rules
+- **Zero Hardcoded Text Policy:** Never write raw, hardcoded user-facing strings (labels, button texts, titles, descriptions, validation messages, empty states, or tooltips) directly inside React/TSX files.
+- **Centralized Source of Truth (`src/constants/copy.ts`):**
+  - All user-facing copy MUST be declared inside the `COPY` object in `src/constants/copy.ts` under appropriate domain keys (e.g. `COPY.APP`, `COPY.NAV`, `COPY.NET_WORTH`, `COPY.NET_WORTH_TREND`, `COPY.ASSETS`, `COPY.LIABILITIES`, `COPY.FIRE`, `COPY.AUTH`, `COPY.COMMON`, etc.).
+  - Always import and reference `COPY` in components (`import { COPY } from "@/constants/copy"`). This ensures consistent terminology and prepares the application for localization.
+
 ## Development & Server Lifecycle
 - **Fast Refresh (HMR):** Next.js handles frontend changes dynamically in real time. Do not restart the dev server (`npm run dev:web` / `next dev`) when editing React, TypeScript, or CSS files.
 - **Cache Integrity:** Never run `npm run build` or `next build` concurrently while `next dev` is running, as they share the `.next` cache directory and will cause Webpack module resolution errors in the running dev server.

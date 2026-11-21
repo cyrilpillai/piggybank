@@ -3,6 +3,7 @@ import {
   Asset,
   Liability,
   DashboardResponse,
+  NetWorthHistoryResponse,
   CurrencyItem,
   FireScenario,
   FireScenarioSummary,
@@ -239,6 +240,14 @@ class ApiClient {
   async getDashboard(currency?: string): Promise<DashboardResponse> {
     const query = currency ? `?currency=${currency}` : "";
     return this.request<DashboardResponse>(`/dashboard/summary${query}`);
+  }
+
+  async getNetWorthHistory(range: string = "1M", currency?: string): Promise<NetWorthHistoryResponse> {
+    const params = new URLSearchParams();
+    if (range) params.append("range", range);
+    if (currency) params.append("currency", currency);
+    const query = params.toString() ? `?${params.toString()}` : "";
+    return this.request<NetWorthHistoryResponse>(`/dashboard/history${query}`);
   }
 
   // --- Assets ---

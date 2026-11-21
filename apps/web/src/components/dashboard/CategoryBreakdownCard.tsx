@@ -339,20 +339,20 @@ export const CategoryBreakdownCard: React.FC<CategoryBreakdownCardProps> = ({
   }, [activeCategory, items]);
 
   return (
-    <div className="rounded-[32px] ios-glass-card p-6 sm:p-7 flex flex-col justify-between shadow-ios-card transition-all duration-300">
+    <div className="rounded-[32px] ios-glass-card p-6 sm:p-8 flex flex-col justify-between shadow-ios-card transition-all duration-300">
       <div>
         {/* Top Header Row: Icon, Title & Category Count */}
-        <div className="flex items-center justify-between gap-3 mb-5">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-white/[0.08] mb-3">
+          <div className="flex items-center gap-2.5">
             <div
-              className={`h-11 w-11 ios-icon-box ${
+              className={`h-9 w-9 rounded-xl ios-icon-box ${
                 isAsset ? "ios-icon-box-emerald" : "ios-icon-box-rose"
-              }`}
+              } shrink-0`}
             >
-              <Icon className="h-5 w-5 stroke-[2.2]" />
+              <Icon className="h-4 w-4 stroke-[2.2]" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">{title}</h3>
+              <h3 className="text-base font-bold text-white tracking-tight">{title}</h3>
               <p className="text-[11px] text-slate-400 font-medium">
                 {selectedCategoryName ? (
                   <span
@@ -407,9 +407,9 @@ export const CategoryBreakdownCard: React.FC<CategoryBreakdownCardProps> = ({
             }
           />
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-3">
             {/* Reusable Glass Donut Chart & Dynamic Center Readout */}
-            <div className="py-2 sm:py-4 flex justify-center">
+            <div className="pt-1 pb-2 flex justify-center">
               <GlassDonutChart
                 segments={donutSegments}
                 selectedLabel={selectedCategoryName}

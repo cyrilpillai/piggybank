@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { trackLogin } from "@/lib/analytics";
 import { User } from "@/types";
 import { PiggyLogo } from "@/components/ui/PiggyLogo";
+import { COPY } from "@/constants/copy";
 import {
   ArrowRight,
   Globe,
@@ -149,10 +150,10 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
           </div>
           <div>
             <span className="text-xl font-black tracking-tight text-white block">
-              Piggybank
+              {COPY.AUTH.APP_NAME}
             </span>
             <span className="text-[10px] uppercase font-bold tracking-wider text-pink-400">
-              Personal Wealth OS
+              {COPY.AUTH.APP_TAGLINE}
             </span>
           </div>
         </div>
@@ -168,21 +169,20 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/25 backdrop-blur-md">
               <Sparkles className="h-3.5 w-3.5 text-pink-400" />
               <span className="text-xs font-semibold tracking-wide text-pink-300">
-                Multi-Currency Net Worth Intelligence
+                {COPY.AUTH.PILL_BADGE}
               </span>
             </div>
 
             {/* Headline */}
             <div className="space-y-3">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-[1.12]">
-                Smash boring spreadsheets.{" "}
+                {COPY.AUTH.HERO_TITLE_PREFIX}{" "}
                 <span className="block bg-gradient-to-r from-pink-400 via-rose-300 to-teal-300 bg-clip-text text-transparent">
-                  Know your true net worth.
+                  {COPY.AUTH.HERO_TITLE_GRADIENT}
                 </span>
               </h1>
               <p className="text-sm sm:text-base text-slate-300 max-w-xl leading-relaxed">
-                Track your bank accounts, stocks, real estate, and liabilities across 10+ global currencies. 
-                Piggybank auto-normalizes your finances with official European Central Bank FX reference rates in a private, distraction-free ledger.
+                {COPY.AUTH.HERO_DESC}
               </p>
             </div>
 
@@ -195,7 +195,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
                   <span className="text-[11px] font-bold uppercase tracking-wider text-slate-300">
-                    Portfolio Snapshot Demo
+                    {COPY.AUTH.PORTFOLIO_DEMO_TITLE}
                   </span>
                 </div>
                 <div className="text-[11px] font-semibold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
@@ -207,7 +207,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
               <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
                 <div>
                   <span className="text-[11px] font-medium text-slate-400 block mb-0.5">
-                    Total Normalized Net Worth
+                    {COPY.AUTH.NORMALIZED_NET_WORTH}
                   </span>
                   <div className="text-2xl sm:text-3xl font-black tracking-tight text-white">
                     $148,250.00
@@ -266,9 +266,9 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                 <div className="h-8 w-8 rounded-xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-1">
                   <Globe className="h-4 w-4" />
                 </div>
-                <div className="text-xs font-bold text-white">Multi-Currency</div>
+                <div className="text-xs font-bold text-white">{COPY.AUTH.MULTI_CURRENCY_TITLE}</div>
                 <p className="text-[11px] text-slate-400 leading-snug">
-                  Auto-conversion across 10+ fiat currencies with ECB reference exchange rates.
+                  {COPY.AUTH.MULTI_CURRENCY_DESC}
                 </p>
               </div>
 
@@ -276,9 +276,9 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                 <div className="h-8 w-8 rounded-xl bg-teal-500/15 border border-teal-500/20 flex items-center justify-center text-teal-400 mb-1">
                   <TrendingUp className="h-4 w-4" />
                 </div>
-                <div className="text-xs font-bold text-white">Asset & Liability Ledger</div>
+                <div className="text-xs font-bold text-white">{COPY.AUTH.LEDGER_TITLE}</div>
                 <p className="text-[11px] text-slate-400 leading-snug">
-                  Track real estate, stocks, bank deposits, and credit cards side-by-side.
+                  {COPY.AUTH.LEDGER_DESC}
                 </p>
               </div>
 
@@ -286,9 +286,9 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                 <div className="h-8 w-8 rounded-xl bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-1">
                   <Lock className="h-4 w-4" />
                 </div>
-                <div className="text-xs font-bold text-white">100% Private</div>
+                <div className="text-xs font-bold text-white">{COPY.AUTH.PRIVACY_TITLE}</div>
                 <p className="text-[11px] text-slate-400 leading-snug">
-                  No banking password scraping or third-party credential brokers required.
+                  {COPY.AUTH.PRIVACY_DESC}
                 </p>
               </div>
             </div>
@@ -304,10 +304,10 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                   <PiggyLogo className="h-7 w-7 stroke-[2.4] text-pink-400" />
                 </div>
                 <h2 className="text-2xl font-bold tracking-tight text-white">
-                  Welcome to Piggybank
+                  {COPY.AUTH.WELCOME_TITLE}
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-400">
-                  Sign in to access your personal wealth dashboard
+                  {COPY.AUTH.WELCOME_SUBTITLE}
                 </p>
               </div>
 
@@ -352,12 +352,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                         d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                       />
                     </svg>
-                    <span>Continue with Google</span>
+                    <span>{COPY.AUTH.CONTINUE_WITH_GOOGLE}</span>
                   </button>
                 </div>
 
                 <p className="text-[11px] text-center text-slate-400">
-                  Instant sign-in with your Google account. No password needed.
+                  {COPY.AUTH.GOOGLE_INSTANT_NOTE}
                 </p>
               </div>
 
@@ -367,7 +367,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                   <div className="flex items-center gap-2">
                     <Zap className="h-3.5 w-3.5 text-amber-400" />
                     <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300">
-                      Developer & Demo Sandbox
+                      {COPY.AUTH.DEV_SANDBOX_TITLE}
                     </span>
                   </div>
 
@@ -379,12 +379,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                     {isLoading ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>Connecting to Piggybank...</span>
+                        <span>{COPY.AUTH.DEV_CONNECTING}</span>
                       </>
                     ) : (
                       <>
                         <Zap className="h-4 w-4 fill-white stroke-[2.2]" />
-                        <span>1-Click Dev Login (John Doe)</span>
+                        <span>{COPY.AUTH.DEV_LOGIN_BTN}</span>
                         <ArrowRight className="h-4 w-4 ml-auto text-white stroke-[2.5]" />
                       </>
                     )}
@@ -397,7 +397,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                       onClick={() => setShowCustomDev(!showCustomDev)}
                       className="text-xs text-slate-400 hover:text-slate-200 font-semibold flex items-center justify-between w-full transition"
                     >
-                      <span>Custom Test Identity</span>
+                      <span>{COPY.AUTH.CUSTOM_IDENTITY}</span>
                       <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-slate-300 border border-white/10">
                         {showCustomDev ? "Hide" : "Customize"}
                       </span>
@@ -407,7 +407,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                       <form onSubmit={handleDevLogin} className="mt-3 space-y-3 pt-2">
                         <div>
                           <label className="block text-[11px] font-semibold text-slate-300 mb-1">
-                            Display Name
+                            {COPY.AUTH.DISPLAY_NAME}
                           </label>
                           <input
                             type="text"
@@ -420,7 +420,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                         </div>
                         <div>
                           <label className="block text-[11px] font-semibold text-slate-300 mb-1">
-                            Email Address
+                            {COPY.AUTH.EMAIL_ADDRESS}
                           </label>
                           <input
                             type="email"
@@ -436,7 +436,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
                           disabled={isLoading}
                           className="w-full py-2.5 px-3 rounded-xl ios-glass-pill hover:bg-white/15 text-xs font-bold text-slate-100 transition"
                         >
-                          Enter with Custom Profile
+                          {COPY.AUTH.CUSTOM_ENTER}
                         </button>
                       </form>
                     )}
@@ -448,22 +448,21 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
               <div className="pt-4 border-t border-white/[0.08] space-y-2.5">
                 <div className="flex items-center gap-2.5 text-xs text-slate-300">
                   <ShieldCheck className="h-4 w-4 text-emerald-400 shrink-0" />
-                  <span>256-bit secure encryption for your ledger</span>
+                  <span>{COPY.AUTH.ENCRYPTION_NOTE}</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs text-slate-300">
                   <Lock className="h-4 w-4 text-teal-400 shrink-0" />
-                  <span>Zero bank credential access required</span>
+                  <span>{COPY.AUTH.NO_CREDENTIAL_NOTE}</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-xs text-slate-300">
                   <CheckCircle2 className="h-4 w-4 text-indigo-400 shrink-0" />
-                  <span>Free to use • No recurring subscription</span>
+                  <span>{COPY.AUTH.FREE_TO_USE}</span>
                 </div>
               </div>
 
               {/* Footer legal text */}
               <p className="text-[10px] text-center text-slate-500 pt-2 border-t border-white/[0.05] leading-relaxed">
-                By signing in, you agree to Piggybank&apos;s privacy-first design principles. 
-                Your financial data is private and never sold.
+                {COPY.AUTH.LEGAL_NOTE}
               </p>
             </div>
           </div>
@@ -474,12 +473,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLoginSuccess }) => {
       <footer className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-white/[0.05]">
         <div className="flex items-center gap-2">
           <PiggyLogo className="h-4 w-4 text-pink-400" />
-          <span>Piggybank • Personal Wealth OS</span>
+          <span>{COPY.AUTH.FOOTER_TEXT}</span>
         </div>
         <div className="flex items-center gap-4 text-[11px] text-slate-400">
-          <span>Multi-Currency Normalization</span>
+          <span>{COPY.AUTH.FOOTER_NORMALIZATION}</span>
           <span>•</span>
-          <span>Liability-to-Asset Ratios</span>
+          <span>{COPY.AUTH.FOOTER_RATIOS}</span>
         </div>
       </footer>
     </div>
